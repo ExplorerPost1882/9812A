@@ -51,6 +51,15 @@ task usercontrol()
 
 	while (true)
 	{
+<<<<<<< HEAD
+=======
+
+	  motor[RightWheel1] = vexRT[Ch2];
+	  motor[RightWheel2] = vexRT[Ch2];
+
+	  motor[LeftWheel1] = 127;
+	  motor[LeftWheel2] = 127;
+>>>>>>> origin/master
 
 	  motor[RightWheel1] = vexRT[Ch1];
 	  motor[RightWheel2] = vexRT[Ch1];
