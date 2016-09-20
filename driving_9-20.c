@@ -50,12 +50,11 @@ task usercontrol()
 
 
 	while (true)
-	{
-
-	  motor[RightWheel1] = vexRT[Ch1];
-	  motor[RightWheel2] = vexRT[Ch1];
-	  motor[LeftWheel1] = vexRT[Ch3];
-	  motor[LeftWheel2] = vexRT[Ch3];
+{
+	motor[RightWheel1] = vexRT[Ch2];
+	motor[RightWheel2] = vexRT[Ch2];
+	motor[LeftWheel1] = vexRT[Ch3];
+  motor[LeftWheel2] = vexRT[Ch3];
 
 	  UserControlCodePlaceholderForTesting();
 	}
