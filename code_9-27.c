@@ -40,9 +40,9 @@ task usercontrol()
 	while (1==1)
 {
 
-	motor[RightWheel2] = vexRT[Ch2];
+	motor[RightWheel2] = vexRT[Ch2];//drives le right wheel
 
-  motor[LeftWheel2] = vexRT[Ch3];
+  motor[LeftWheel2] = vexRT[Ch3];//drives le left wheel
 
 
 	}
