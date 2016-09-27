@@ -80,9 +80,9 @@ task usercontrol()
   while (true)
   {
 
-  motor[Shoulder] = vexRT[Ch2Xmtr2];
+  motor[Shoulder] = vexRT[Ch2Xmtr2];//moves le shoulder motor via joy
 
-  motor[Elbow] = vexRT[Ch3Xmtr2];
+  motor[Elbow] = vexRT[Ch3Xmtr2];//moves le elbow motor via joy
 
     UserControlCodePlaceholderForTesting();
   }
