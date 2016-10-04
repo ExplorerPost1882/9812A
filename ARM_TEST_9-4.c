@@ -82,7 +82,16 @@ task usercontrol()
   {
   	motor[Shoulder] = 127;
   }
-  else
+  else if(vexRT[Btn8R] == 1)
+  {
+  	motor[Elbow] = -127;
+  	wait10Msec(150);
+  	motor[Elbow] = 0;
+  }
+  else if(vexRT[Btn8D] == 1)
+  {
+  	motor[Shoulder] = -127;
+  }
   {
   	motor[Shoulder] = 0;
   {
@@ -97,6 +106,8 @@ task usercontrol()
   	motor[Elbow] = 127;
   	wait10Msec(150);
   }
+
+
 
     }
    }
