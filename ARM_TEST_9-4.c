@@ -95,9 +95,6 @@ task usercontrol()
   {
   	motor[Shoulder] = 0;
   {
-
-
-
     }
    }
   }

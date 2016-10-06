@@ -70,9 +70,8 @@ task autonomous()
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
-task usercontrol()
+task usercontrol ()
 {
-  // User control code here, inside the loop
 
   while (true)
   {
@@ -84,7 +83,7 @@ task usercontrol()
   else
   {
   	motor[Shoulder] = 0;
-  {
+  {//this command ^^^^^^^^^^^ will make it so the shoulder motor works on a button
 
   while (SensorValue(LimitLeElbow) == 0)
   {
@@ -93,11 +92,7 @@ task usercontrol()
   if (SensorValue(LimitLeElbow) == 1)
   {
   	motor[Shoulder] = 0;
-  	motor[Elbow] = 127;
-  	wait10Msec(150);
-  }
+  }//this command ^^^^^^^^^^^^ enables a limit switch, which keeps the shoulder from moving past the LS.
 
     }
    }
-  }
-}
