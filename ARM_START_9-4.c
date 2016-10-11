@@ -93,6 +93,7 @@ task usercontrol ()
   {
   	motor[Shoulder] = 0;
   }//this command ^^^^^^^^^^^^ enables a limit switch, which keeps the shoulder from moving past the LS.
-
     }
    }
+ }
+}
