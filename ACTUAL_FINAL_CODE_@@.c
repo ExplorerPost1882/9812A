@@ -43,6 +43,17 @@ task usercontrol()
 
 	while (1==1)
 {
+	if (vexRT[Btn5D] == 1)
+	{
+		motor[Elbow] = -127;
+		wait1Msec(1000);
+		motor[Elbow] = 0;
+		wait1Msec(100);
+		motor[RightWheel2] = 127;
+		motor[LeftWheel2] = 127;
+		wait1Msec(3000);
+	}
+
 
 	motor[RightWheel2] = vexRT[Ch2];//drives le right wheel
 
