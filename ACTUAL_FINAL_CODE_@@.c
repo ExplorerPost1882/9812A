@@ -28,66 +28,64 @@ void pre_auton()
 	// All activities that occur before the competition starts
 	// Example: clearing encoders, setting servo positions, ...
 }
+//my functions
+
+void turn90right ()
+{
+	motor[RightWheel2] = 90;
+	motor[LeftWheel2] = -90;
+	wait1Msec(635);
+	motor[RightWheel2] = 0;
+	motor[LeftWheel2] = 0;
+}
+
+void turn90left ()
+{
+	motor[RightWheel2] = -90;
+	motor[LeftWheel2] = 90;
+	wait1Msec(635);
+	motor[RightWheel2] = 0;
+	motor[LeftWheel2] = 0;
+}
+
+void moveforward (int cm)
+{
+	motor[RightWheel2] = 90;
+	motor[LeftWheel2] = 90;
+	motor[RightWheel2] = 0;
+	motor[RightWheel2] = 0;
+}
+
+void movebackward (int cm)
+{
+	motor[RightWheel2] = -90;
+	motor[LeftWheel2] = -90;
+	motor[RightWheel2] = 0;
+	motor[LeftWheel2] = 0;
+}
+
+
 
 //AUTONOMOUS****************************************************************************************************************************************************************
 
 task autonomous ()
 
 {
-		while(SensorValue(UltraSonic1) > 20  || SensorValue(UltraSonic1) == -1)		// Loop while robot's Ultrasonic sensor is further than 20 inches away from an object
-	{                                                                         // || (or) it is '-1'.  (-1 is the value returned when nothing is in it's visable range)
-		motor[RightWheel2] = 63;			// Motor on port2 is run at half (63) power forward
-		motor[LeftWheel2]  = 63;			// Motor on port3 is run at half (63) power forward
-	}
-
-	  while(SensorValue(UltraSonic1) < 20 || SensorValue(UltraSonic1) == -1)
-	{
-		motor[LeftWheel2] = 63;
-		motor[RightWheel2] = 63;
-	}
-
-	  while(SensorValue(UltraSonic1) = 20 || SensorValue(UltraSonic1) == -1)
-	{
-		motor[LeftWheel2] = 0;
-		motor[RightWheel2] = 0;
-	}
-
-		while(SensorValue(UltraSonic2) > 20  || SensorValue(UltraSonic2) == -1)		// Loop while robot's Ultrasonic sensor is further than 20 inches away from an object
-	{                                                                         // || (or) it is '-1'.  (-1 is the value returned when nothing is in it's visable range)
-		motor[RightWheel2] = 63;			// Motor on port2 is run at half (63) power forward
-		motor[LeftWheel2]  = 63;			// Motor on port3 is run at half (63) power forward
-	}
-
-	  while(SensorValue(UltraSonic2) < 20 || SensorValue(UltraSonic2) == -1)
-	{
-		motor[LeftWheel2] = 63;
-		motor[RightWheel2] = 63;
-	}
-
-	  while(SensorValue(UltraSonic2) = 20 || SensorValue(UltraSonic2) == -1
-	{
-		motor[LeftWheel2] = 0;
-		motor[RightWheel2] = 0;
-	}
-
-		while(SensorValue(UltraSonic3) > 20  || SensorValue(UltraSonic3) == -1)		// Loop while robot's Ultrasonic sensor is further than 20 inches away from an object
-	{                                                                         // || (or) it is '-1'.  (-1 is the value returned when nothing is in it's visable range)
-		motor[RightWheel2] = 63;			// Motor on port2 is run at half (63) power forward
-		motor[LeftWheel2]  = 63;			// Motor on port3 is run at half (63) power forward
-	}
-		while(SensorValue(UltraSonic3) < 20 || SensorValue(UltraSonic3) == -1)
-	{
-		motor[LeftWheel2] = 63;
-		motor[RightWheel2] = 63;
-	}
-	  while(SensorValue(UltraSonic3) = 20 || SensorValue(UltraSonic3) == -1)
-	{
-		motor[LeftWheel2] = 0;
-		motor[RightWheel2] = 0;
-	}
-
-
-	AutonomousCodePlaceholderForTesting();
+	moveforward(46);
+	turn90right();
+	movebackward(33.02);
+	turn90right();
+	moveforward(26.98);
+	movebackward(20);
+	motor[Elbow] = 127;
+	wait1Msec(200);
+	motor[Elbow] = 0;
+	moveforward(20);
+	movebackward(20);
+	motor[Elbow] = -127;
+	wait1Msec(200);
+	motor[Elbow] = 0;
+	turn90left();
 }
 
 //USER CONTROL*************************************************************************************************************************************************************
