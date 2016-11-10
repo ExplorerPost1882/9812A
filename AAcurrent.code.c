@@ -1,7 +1,7 @@
 #pragma config(Sensor, dgtl1,  LimitLeElbow,   sensorTouch)
-#pragma config(Sensor, dgtl2,  UltraSonic1,    sensorSONAR_cm)
-#pragma config(Sensor, dgtl4,  UltraSonic2,    sensorSONAR_cm)
-#pragma config(Sensor, dgtl6,  UltraSonic3,    sensorSONAR_cm)
+#pragma config(Sensor, dgtl2,  UltS1,          sensorSONAR_cm)
+#pragma config(Sensor, dgtl4,  UltS2,          sensorSONAR_cm)
+#pragma config(Sensor, dgtl6,  UltS3,          sensorSONAR_cm)
 #pragma config(Motor,  port1,           LeftWheel2,    tmotorVex393_HBridge, openLoop, reversed)
 #pragma config(Motor,  port3,           Shoulder1,     tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           Shoulder2,     tmotorVex393_MC29, openLoop)
@@ -32,8 +32,8 @@ void pre_auton()
 
 void turn90right ()
 {
-	motor[RightWheel2] = 90;
-	motor[LeftWheel2] = -90;
+	motor[RightWheel2] = -90;
+	motor[LeftWheel2] = 90;
 	wait1Msec(635);
 	motor[RightWheel2] = 0;
 	motor[LeftWheel2] = 0;
@@ -41,8 +41,8 @@ void turn90right ()
 
 void turn90left ()
 {
-	motor[RightWheel2] = -90;
-	motor[LeftWheel2] = 90;
+	motor[RightWheel2] = 90;
+	motor[LeftWheel2] = -90;
 	wait1Msec(635);
 	motor[RightWheel2] = 0;
 	motor[LeftWheel2] = 0;
@@ -50,29 +50,73 @@ void turn90left ()
 
 void moveforward (int cm)
 {
-	motor[RightWheel2] = 90;
-	motor[LeftWheel2] = 90;
+	while(SensorValue[UltS1] < cm)
+	{
+		motor[RightWheel2] = 63;
+		motor[LeftWheel2] = 63;
+	}
 	motor[RightWheel2] = 0;
-	motor[RightWheel2] = 0;
+	motor[LeftWheel2] = 0;
 }
 
 void movebackward (int cm)
 {
-	motor[RightWheel2] = -90;
+	while(SensorValue[UltS1] > cm)
+	{
+		motor[RightWheel2] = -63;
+		motor[LeftWheel2] = -63;
+	}
+	motor[RightWheel2] = 0;
+	motor[LeftWheel2] = 0;
+}
+
+void curve90left ()
+{
+	motor[LeftWheel2] = 90;
+	motor[RightWheel2] = 40;
+
+}
+
+void curve90right ()
+{
+	motor[LeftWheel2] = 90;
+	motor[RightWheel2] = 90;
+	wait1Msec(300);
 	motor[LeftWheel2] = -90;
+	motor[RightWheel2] = 90;
+	wait1Msec(400);
 	motor[RightWheel2] = 0;
 	motor[LeftWheel2] = 0;
 }
 
 
 
+
+
 //AUTONOMOUS****************************************************************************************************************************************************************
 
-task autonomous ()
-
+void doAutonomous()
 {
 	moveforward(46);
 	turn90right();
+	movebackward(33.02);
+	turn90left();
+	moveforward(46+26.98);
+	movebackward(46+6.98);
+	motor[Elbow] = 127;
+	wait1Msec(200);
+	motor[Elbow] = 0;
+	moveforward(46+26.98);
+	movebackward(46+6.98);
+	motor[Elbow] = -127;
+	wait1Msec(200);
+	motor[Elbow] = 0;
+	turn90left();
+/*	movebackward(68.58);
+	curve90left();
+	curve90right();
+	moveforward(68.58);
+	turn90left();
 	movebackward(33.02);
 	turn90right();
 	moveforward(26.98);
@@ -85,7 +129,18 @@ task autonomous ()
 	motor[Elbow] = -127;
 	wait1Msec(200);
 	motor[Elbow] = 0;
-	turn90left();
+	movebackward(20);
+
+	*/
+
+
+
+}
+
+
+task autonomous ()
+{
+	doAutonomous();
 }
 
 //USER CONTROL*************************************************************************************************************************************************************
@@ -95,18 +150,22 @@ task usercontrol()
 
 
 	while (1==1)
-{
+	{
 
 
 
-	motor[RightWheel2] = vexRT[Ch2];//drives le right wheel
+		motor[RightWheel2] = vexRT[Ch2];//drives le right wheel
 
-  motor[LeftWheel2] = vexRT[Ch3];//drives le left wheel
+	  motor[LeftWheel2] = vexRT[Ch3];//drives le left wheel
 
-  motor[Shoulder1] = vexRT[Ch3Xmtr2];//controls Shoulder joint
-	motor[Shoulder2] = vexRT[Ch3Xmtr2];//controls Shoulder joint
+	  motor[Shoulder1] = vexRT[Ch3Xmtr2];//controls Shoulder joint
+		motor[Shoulder2] = vexRT[Ch3Xmtr2];//controls Shoulder joint
 
-  motor[Elbow] = vexRT[Ch2Xmtr2];//controls elbow joint
+	  motor[Elbow] = vexRT[Ch2Xmtr2];//controls elbow joint
 
+	  if(vexRT[Btn5D] == 1)
+	  {
+	  	doAutonomous();
+		}
 	}
 }
