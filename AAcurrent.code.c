@@ -2,6 +2,8 @@
 #pragma config(Sensor, dgtl2,  UltS1,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl4,  UltS2,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl6,  UltS3,          sensorSONAR_cm)
+#pragma config(Sensor, dgtl8,  EncoR1,         sensorQuadEncoder)
+#pragma config(Sensor, dgtl10, EncoL1,         sensorQuadEncoder)
 #pragma config(Motor,  port1,           LeftWheel2,    tmotorVex393_HBridge, openLoop, reversed)
 #pragma config(Motor,  port3,           Shoulder1,     tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           Shoulder2,     tmotorVex393_MC29, openLoop)
@@ -32,20 +34,25 @@ void pre_auton()
 
 void turn90right ()
 {
-	motor[RightWheel2] = -90;
-	motor[LeftWheel2] = 90;
-	wait1Msec(635);
-	motor[RightWheel2] = 0;
-	motor[LeftWheel2] = 0;
+	SensorValue[EncoR1] = 0;
+
+	while(SensorValue(EncoR1) < 225)
+	{
+		motor[RightWheel2] = -90;
+		motor[LeftWheel2] = 90;
+	}
+
 }
 
 void turn90left ()
 {
-	motor[RightWheel2] = 90;
-	motor[LeftWheel2] = -90;
-	wait1Msec(635);
-	motor[RightWheel2] = 0;
-	motor[LeftWheel2] = 0;
+	SensorValue[EncoL2] = 0;
+
+	while(SensorValue(EncoL2) < 225)
+	{
+		motor[RightWheel2] = 90;
+		motor[LeftWheel2] = -90;
+	}
 }
 
 void moveforward (int cm)
@@ -90,7 +97,7 @@ void curve90right ()
 }
 
 
-
+//happy
 
 
 //AUTONOMOUS****************************************************************************************************************************************************************
@@ -98,22 +105,28 @@ void curve90right ()
 void doAutonomous()
 {
 	moveforward(46);
+	moveforward(46);
 	turn90right();
 	movebackward(33.02);
 	turn90left();
-	moveforward(46+26.98);
-	movebackward(46+6.98);
-	motor[Elbow] = 127;
-	wait1Msec(200);
-	motor[Elbow] = 0;
-	moveforward(46+26.98);
-	movebackward(46+6.98);
+	moveforward(46+80);
+	moveforward(46+80);
+	movebackward(46);
 	motor[Elbow] = -127;
-	wait1Msec(200);
+	wait1Msec(1200);
 	motor[Elbow] = 0;
-	turn90left();
-/*	movebackward(68.58);
-	curve90left();
+	motor[Elbow] = 127;
+	wait1Msec(300);
+	motor[Elbow] = 0;
+	moveforward(46+80);
+	moveforward(46+80);
+	movebackward(46);
+	motor[Elbow] = 127;
+	wait1Msec(1200);
+	motor[Elbow] = 0;
+	turn90right();
+	moveforward(200);
+	/*curve90left();
 	curve90right();
 	moveforward(68.58);
 	turn90left();
