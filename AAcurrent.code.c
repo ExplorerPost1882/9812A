@@ -46,9 +46,9 @@ void turn90right ()
 
 void turn90left ()
 {
-	SensorValue[EncoL2] = 0;
+	SensorValue[EncoL1] = 0;
 
-	while(SensorValue(EncoL2) < 225)
+	while(SensorValue(EncoL1) < -225)
 	{
 		motor[RightWheel2] = 90;
 		motor[LeftWheel2] = -90;
@@ -77,24 +77,24 @@ void movebackward (int cm)
 	motor[LeftWheel2] = 0;
 }
 
-void curve90left ()
-{
-	motor[LeftWheel2] = 90;
-	motor[RightWheel2] = 40;
+//void curve90left ()
+//{
+	//motor[LeftWheel2] = 90;
+	//motor[RightWheel2] = 40;
 
-}
+//}
 
-void curve90right ()
-{
-	motor[LeftWheel2] = 90;
-	motor[RightWheel2] = 90;
-	wait1Msec(300);
-	motor[LeftWheel2] = -90;
-	motor[RightWheel2] = 90;
-	wait1Msec(400);
-	motor[RightWheel2] = 0;
-	motor[LeftWheel2] = 0;
-}
+//void curve90right ()
+//{
+	//motor[LeftWheel2] = 90;
+	//motor[RightWheel2] = 90;
+	//wait1Msec(300);
+	//motor[LeftWheel2] = -90;
+	//motor[RightWheel2] = 90;
+	//wait1Msec(400);
+	//motor[RightWheel2] = 0;
+	//motor[LeftWheel2] = 0;
+//}
 
 
 //happy
