@@ -1,3 +1,5 @@
+#pragma config(Sensor, in1,    PotenR,         sensorPotentiometer)
+#pragma config(Sensor, in2,    PotenB,         sensorPotentiometer)
 #pragma config(Sensor, dgtl1,  LimitLeElbow,   sensorTouch)
 #pragma config(Sensor, dgtl2,  UltS1,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl4,  UltS2,          sensorSONAR_cm)
@@ -48,7 +50,7 @@ void turn90left ()
 {
 	SensorValue[EncoL1] = 0;
 
-	while(SensorValue(EncoL1) < -225)
+	while(SensorValue(EncoL1) > -250)
 	{
 		motor[RightWheel2] = 90;
 		motor[LeftWheel2] = -90;
@@ -77,27 +79,22 @@ void movebackward (int cm)
 	motor[LeftWheel2] = 0;
 }
 
-//void curve90left ()
-//{
-	//motor[LeftWheel2] = 90;
-	//motor[RightWheel2] = 40;
-
-//}
-
-//void curve90right ()
-//{
-	//motor[LeftWheel2] = 90;
-	//motor[RightWheel2] = 90;
-	//wait1Msec(300);
-	//motor[LeftWheel2] = -90;
-	//motor[RightWheel2] = 90;
-	//wait1Msec(400);
-	//motor[RightWheel2] = 0;
-	//motor[LeftWheel2] = 0;
-//}
-
-
-//happy
+void flipstar ();
+{
+	while(SensorValue[PotenR] < 4095)
+	{
+		motor[Elbow] = 90;
+		//3293
+	}
+	while(SensorValue[PotenB] < 3293)
+	{
+		motor[Shoulder1] = 100;
+		motor[Shoulder2] = 100;
+	}
+	motor[Elbow] = 0;
+	motor[Shoulder1] = 0;
+	motor[Shoulder2] = 0;
+}
 
 
 //AUTONOMOUS****************************************************************************************************************************************************************
@@ -124,28 +121,6 @@ void doAutonomous()
 	motor[Elbow] = 127;
 	wait1Msec(1200);
 	motor[Elbow] = 0;
-	turn90right();
-	moveforward(200);
-	/*curve90left();
-	curve90right();
-	moveforward(68.58);
-	turn90left();
-	movebackward(33.02);
-	turn90right();
-	moveforward(26.98);
-	movebackward(20);
-	motor[Elbow] = 127;
-	wait1Msec(200);
-	motor[Elbow] = 0;
-	moveforward(20);
-	movebackward(20);
-	motor[Elbow] = -127;
-	wait1Msec(200);
-	motor[Elbow] = 0;
-	movebackward(20);
-
-	*/
-
 
 
 }
