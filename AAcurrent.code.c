@@ -1,6 +1,5 @@
 #pragma config(Sensor, in1,    PotenR,         sensorPotentiometer)
 #pragma config(Sensor, in2,    PotenB,         sensorPotentiometer)
-#pragma config(Sensor, dgtl1,  LimitLeElbow,   sensorTouch)
 #pragma config(Sensor, dgtl2,  UltS1,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl4,  UltS2,          sensorSONAR_cm)
 #pragma config(Sensor, dgtl6,  UltS3,          sensorSONAR_cm)
@@ -79,21 +78,28 @@ void movebackward (int cm)
 	motor[LeftWheel2] = 0;
 }
 
-void flipstar ();
+void flipstar ()
 {
-	while(SensorValue[PotenR] < 4095)
+	while(SensorValue[PotenR] < 3880)
 	{
-		motor[Elbow] = 90;
-		//3293
+		motor[Shoulder1] = 150;
+		motor[Shoulder2] = 150;
+		motor[Elbow] = 0;
 	}
-	while(SensorValue[PotenB] < 3293)
-	{
-		motor[Shoulder1] = 100;
-		motor[Shoulder2] = 100;
-	}
-	motor[Elbow] = 0;
 	motor[Shoulder1] = 0;
 	motor[Shoulder2] = 0;
+
+	while(SensorValue[PotenB] < 4095)
+	{
+		motor[Elbow] = 90;
+	}
+	motor[Elbow] = 0;
+
+	while(SensorValue[PotenB] > 4095)
+	{
+		motor[Elbow] = -90;
+	}
+	motor[Elbow] = 0;
 }
 
 
@@ -113,14 +119,15 @@ void doAutonomous()
 	wait1Msec(1200);
 	motor[Elbow] = 0;
 	motor[Elbow] = 127;
-	wait1Msec(300);
+	wait1Msec(400);
 	motor[Elbow] = 0;
 	moveforward(46+80);
 	moveforward(46+80);
 	movebackward(46);
-	motor[Elbow] = 127;
-	wait1Msec(1200);
 	motor[Elbow] = 0;
+	wait1Msec(500);
+	moveforward(46+70);
+//	flipstar();
 
 
 }
@@ -154,6 +161,11 @@ task usercontrol()
 	  if(vexRT[Btn5D] == 1)
 	  {
 	  	doAutonomous();
+		}
+
+		if(vexRT[Btn5UXmtr2] == 1)
+		{
+			flipstar();
 		}
 	}
 }
