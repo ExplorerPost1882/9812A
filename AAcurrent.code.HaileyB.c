@@ -217,7 +217,7 @@ void doAutonomous()
 	turn90left();//turns left 90 degrees
 	moveforward(46+40);*/
 
-	motor[Elbow] = -127;
+/*	motor[Elbow] = -127;
 	wait1Msec(1000);
 	motor[Elbow] = 0;
 	wait1Msec(100);
