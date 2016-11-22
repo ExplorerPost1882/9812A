@@ -116,18 +116,18 @@ void doAutonomous()
 	moveforward(46+80);
 	movebackward(46);
 	motor[Elbow] = -127;
-	wait1Msec(1200);
+	wait1Msec(1100);
 	motor[Elbow] = 0;
 	motor[Elbow] = 127;
-	wait1Msec(400);
+	wait1Msec(200);
 	motor[Elbow] = 0;
 	moveforward(46+80);
 	moveforward(46+80);
 	movebackward(46);
 	motor[Elbow] = 0;
 	wait1Msec(500);
-	moveforward(46+70);
-//	flipstar();
+	moveforward(46+40);
+	flipstar();
 
 
 }
