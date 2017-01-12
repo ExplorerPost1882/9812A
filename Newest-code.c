@@ -1,10 +1,9 @@
-#pragma config(Sensor, dgtl1,  frontLeftE,     sensorQuadEncoder)
-#pragma config(Sensor, dgtl3,  backLeftE,      sensorQuadEncoder)
-#pragma config(Sensor, dgtl5,  backRightE,     sensorQuadEncoder)
-#pragma config(Motor,  port2,           frontRight,    tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port3,           backRight,     tmotorVex393_MC29, openLoop, reversed)
-#pragma config(Motor,  port4,           frontLeft,     tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port5,           backLeft,      tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Sensor, dgtl1,  EncoX2Y1,       sensorQuadEncoder)
+#pragma config(Sensor, dgtl3,  EncoX2Y2,       sensorQuadEncoder)
+#pragma config(Motor,  port2,           X2Y1,          tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port3,           X1Y1,          tmotorVex393_MC29, openLoop, reversed)
+#pragma config(Motor,  port4,           X2Y2,          tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port5,           X1Y2,          tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port6,           Arm1,          tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           Arm2,          tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port8,           Claw1,         tmotorVex393_MC29, openLoop)
@@ -27,7 +26,7 @@
 
 //Main competition background code...do not modify!
 #include "Vex_Competition_Includes.c"
-#include"main.c"
+
 
 
 //PRE_AUTON------------------------------------------------------------------------
@@ -35,9 +34,37 @@ void pre_auton()
 {
 
 	bStopTasksBetweenModes = true;
-	SensorValue(backLeftE) = 0;
-	SensorValue(backRightE) = 0;
-	SensorValue(frontLeftE) = 0;
+
+}
+//functions-------------------------------------------------------------------------
+
+void drive (float dist, float angle, float speed)
+{
+	float c=3.75*PI;//finds circumfrence
+	float rn=dist/c;//finds rotations needed
+	SensorValue[EncoX2Y1] = 0;//sets encoder to zero
+	SensorValue[EncoX2Y2] = 0;//sets encoder to zero
+	float ra=0;//gives variable for motor X2Y2 rotations
+	float rb=0;//gives variable for motor X2Y1 rotations
+	float vCh1=sinDegrees(angle)*speed;//     ^
+	float vCh2=cosDegrees(angle)*speed;//     ^
+	float vCh3=cosDegrees(angle)*speed;//     ^
+	float vCh4=sinDegrees(angle)*speed;//<--- ^this and above gives vaiables for motors based on direction of joystick
+	while (sqrt(ra*ra+rb*rb)<rn)//formula for part of pathagorean theorem
+	{
+
+	  motor[X2Y1] = vCh3+vCh4;
+		motor[X1Y1] = vCh3-vCh4;
+		motor[X2Y2] = vCh2-vCh1;
+		motor[X1Y2] = vCh2+vCh1;
+		ra=SensorValue[EncoX2Y2]/90.0;
+		rb=SensorValue[EncoX2Y1]/90.0;
+
+	}
+	motor[X1Y1] = 0;
+	motor[X1Y2] = 0;
+	motor[X2Y1] = 0;
+	motor[X2Y2] = 0;
 }
 
 //AUTONOMOUS-------------------------------------------------------------------------
@@ -51,30 +78,18 @@ task autonomous()
 
 task usercontrol()
 {
-	int BaseX1 = 0, BaseY1 = 0, BaseX2 = 0;
-	int threshold = 20;
-	while (true)
-	{
-		//Create "deadzone" for Y1/Ch3 (FORWARD/BACK)
-		BaseY1 = (abs(vexRT[Ch3]) > threshold) ? (vexRT[Ch3]) : (0);
-		//Create "deadzone" for X1/Ch4 (RIGHT/LEFT)
-		BaseX1 = (abs(vexRT[Ch4]) > threshold) ? (vexRT[Ch4]) : (0);
-		//Create "deadzone" for X2/Ch1(Rotation of robot about z axis)
-		BaseX2 = (abs(vexRT[Ch1]) > threshold+10) ? (vexRT[Ch1]*2/3) : (0);
-		//call robot movement function
-		moverobot(BaseX1,BaseX2,BaseY1*0.8,0,0,0);
+
 
 		motor[Arm1] = vexRT[Ch1Xmtr2];
 		motor[Arm2] = vexRT[Ch1Xmtr2];
 		motor[Claw1] = vexRT[Ch3Xmtr2];
 		motor[Claw2] = vexRT[Ch3Xmtr2];
-		//motor[X2Y1] = vexRT[Ch3]+vexRT[Ch4];
-		//motor[X1Y1] = vexRT[Ch3]-vexRT[Ch4];
-		//motor[X2Y2] = vexRT[Ch2]-vexRT[Ch1];
-		//motor[X1Y2] = vexRT[Ch2]+vexRT[Ch1];
+	  motor[X2Y1] = vexRT[Ch3]+vexRT[Ch4];
+		motor[X1Y1] = vexRT[Ch3]-vexRT[Ch4];
+		motor[X2Y2] = vexRT[Ch2]-vexRT[Ch1];
+		motor[X1Y2] = vexRT[Ch2]+vexRT[Ch1];
 
 
 
 		UserControlCodePlaceholderForTesting();
 	}
-}
