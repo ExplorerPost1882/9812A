@@ -160,7 +160,7 @@ task usercontrol()
 
 	  if(vexRT[Btn5D] == 1)
 	  {
-	  	doAutonomous();
+	  	doautonomous();
 		}
 
 		if(vexRT[Btn5UXmtr2] == 1)
