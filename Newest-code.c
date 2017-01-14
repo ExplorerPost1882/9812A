@@ -38,7 +38,7 @@ void pre_auton()
 }
 //functions-------------------------------------------------------------------------
 
-void drive (float dist, float angle, float speed)
+/*void drive (float dist, float angle, float speed)
 {
 	float c=3.75*PI;//finds circumfrence
 	float rn=dist/c;//finds rotations needed
@@ -65,7 +65,7 @@ void drive (float dist, float angle, float speed)
 	motor[X1Y2] = 0;
 	motor[X2Y1] = 0;
 	motor[X2Y2] = 0;
-}
+}*/
 
 //AUTONOMOUS-------------------------------------------------------------------------
 
@@ -80,10 +80,10 @@ task usercontrol()
 {
 
 
-		motor[Arm1] = vexRT[Ch1Xmtr2];
+		/*motor[Arm1] = vexRT[Ch1Xmtr2];
 		motor[Arm2] = vexRT[Ch1Xmtr2];
 		motor[Claw1] = vexRT[Ch3Xmtr2];
-		motor[Claw2] = vexRT[Ch3Xmtr2];
+		motor[Claw2] = vexRT[Ch3Xmtr2];*/
 	  motor[X2Y1] = vexRT[Ch3]+vexRT[Ch4];
 		motor[X1Y1] = vexRT[Ch3]-vexRT[Ch4];
 		motor[X2Y2] = vexRT[Ch2]-vexRT[Ch1];
