@@ -1,8 +1,8 @@
 #pragma config(Sensor, dgtl1,  EncoX2Y1,       sensorQuadEncoder)
 #pragma config(Sensor, dgtl3,  EncoX2Y2,       sensorQuadEncoder)
 #pragma config(Motor,  port2,           X2Y1,          tmotorVex393_MC29, openLoop)
-#pragma config(Motor,  port3,           X1Y1,          tmotorVex393_MC29, openLoop, reversed)
-#pragma config(Motor,  port4,           X2Y2,          tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port3,           X1Y1,          tmotorVex393_MC29, openLoop)
+#pragma config(Motor,  port4,           X2Y2,          tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port5,           X1Y2,          tmotorVex393_MC29, openLoop, reversed)
 #pragma config(Motor,  port6,           Arm1,          tmotorVex393_MC29, openLoop)
 #pragma config(Motor,  port7,           Arm2,          tmotorVex393_MC29, openLoop)
@@ -38,9 +38,9 @@ void pre_auton()
 }
 //functions-------------------------------------------------------------------------
 
-/*void drive (float dist, float angle, float speed)
+void drive (float dist, float angle, float speed)
 {
-	float c=3.75*PI;//finds circumfrence
+	float c=3.00*PI;//finds circumfrence
 	float rn=dist/c;//finds rotations needed
 	SensorValue[EncoX2Y1] = 0;//sets encoder to zero
 	SensorValue[EncoX2Y2] = 0;//sets encoder to zero
@@ -48,7 +48,7 @@ void pre_auton()
 	float rb=0;//gives variable for motor X2Y1 rotations
 	float vCh1=sinDegrees(angle)*speed;//     ^
 	float vCh2=cosDegrees(angle)*speed;//     ^
-	float vCh3=cosDegrees(angle)*speed;//     ^
+	float vCh3=cosDegrees(angle)*speed*0.8354;//     ^
 	float vCh4=sinDegrees(angle)*speed;//<--- ^this and above gives vaiables for motors based on direction of joystick
 	while (sqrt(ra*ra+rb*rb)<rn)//formula for part of pathagorean theorem
 	{
@@ -65,12 +65,33 @@ void pre_auton()
 	motor[X1Y2] = 0;
 	motor[X2Y1] = 0;
 	motor[X2Y2] = 0;
-}*/
+}
+
+void doauton ()
+{
+	drive(500, 0, 100);
+	wait1Msec(5000);
+
+}
+
+void stopmotors ()
+{
+	motor[Arm1] = 0;
+	motor[Arm2] = 0;
+	motor[Claw1] = 0;
+	motor[Claw2] = 0;
+	motor[X1Y1] = 0;
+	motor[X1Y2] = 0;
+	motor[X2Y1] = 0;
+	motor[X2Y2] = 0;
+}
+
 
 //AUTONOMOUS-------------------------------------------------------------------------
 
 task autonomous()
 {
+	doauton ();
 
 	AutonomousCodePlaceholderForTesting();
 }
@@ -78,18 +99,26 @@ task autonomous()
 
 task usercontrol()
 {
+    while (true)
+  {
 
-
-		/*motor[Arm1] = vexRT[Ch1Xmtr2];
+		motor[Arm1] = vexRT[Ch1Xmtr2];
 		motor[Arm2] = vexRT[Ch1Xmtr2];
 		motor[Claw1] = vexRT[Ch3Xmtr2];
-		motor[Claw2] = vexRT[Ch3Xmtr2];*/
+		motor[Claw2] = vexRT[Ch3Xmtr2];
 	  motor[X2Y1] = vexRT[Ch3]+vexRT[Ch4];
 		motor[X1Y1] = vexRT[Ch3]-vexRT[Ch4];
 		motor[X2Y2] = vexRT[Ch2]-vexRT[Ch1];
 		motor[X1Y2] = vexRT[Ch2]+vexRT[Ch1];
 
+		if(vexRT[Btn5D] == 1)
+	  {
+	  	doauton();
+		}
 
-
-		UserControlCodePlaceholderForTesting();
+		if(vexRT[Btn5U] == 1)
+		{
+			stopmotors();
+		}
 	}
+}
