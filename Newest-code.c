@@ -40,7 +40,7 @@ void pre_auton()
 
 void drive (float dist, float angle, float speed)
 {
-	float c=3.00*PI;//finds circumfrence
+	float c=3.25*PI;//finds circumfrence
 	float rn=dist/c;//finds rotations needed
 	SensorValue[EncoX2Y1] = 0;//sets encoder to zero
 	SensorValue[EncoX2Y2] = 0;//sets encoder to zero
@@ -67,11 +67,35 @@ void drive (float dist, float angle, float speed)
 	motor[X2Y2] = 0;
 }
 
+void turnlef90 ()
+{
+	SensorValue[EncoX2Y1] = 0;
+	if (SensorValue[EncoX2Y1] < 150)
+	{
+  	motor[X2Y1] = -100;
+  	motor[X1Y1] = -100;
+  	motor[X2Y2] = 100;
+  	motor[X1Y2] = 100;
+  }
+  else if (SensorValue[EncoX2Y1] > 155)
+  {
+  	motor[X2Y1] = 100;
+  	motor[X1Y1] = 100;
+  	motor[X1Y2] = -100;
+  	motor[X2Y2] = -100;
+  }
+  else if (SensorValue[EncoX2Y1] == 153)
+  {
+  	motor[X2Y1] = 0;
+  	motor[X1Y1] = 0;
+  	motor[X1Y2] = 0;
+  	motor[X2Y2] = 0;
+  }
+}
+
 void doauton ()
 {
-	drive(500, 0, 100);
-	wait1Msec(5000);
-
+	turnlef90 ();
 }
 
 void stopmotors ()
@@ -85,6 +109,8 @@ void stopmotors ()
 	motor[X2Y1] = 0;
 	motor[X2Y2] = 0;
 }
+
+
 
 
 //AUTONOMOUS-------------------------------------------------------------------------
