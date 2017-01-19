@@ -69,6 +69,7 @@ void drive (float dist, float angle, float speed)
 
 void turnlef90 ()
 {
+	//THIS ALL NEEDS TO BE IN A LOOP, OTHERWISE IT WILL TURN THE MOTORS ON FOREVER
 	SensorValue[EncoX2Y1] = 0;
 	if (SensorValue[EncoX2Y1] < 150)
 	{
@@ -84,13 +85,28 @@ void turnlef90 ()
   	motor[X1Y2] = -100;
   	motor[X2Y2] = -100;
   }
-  else if (SensorValue[EncoX2Y1] == 153)
+  else if (SensorValue[EncoX2Y1] == 153) //THIS SHOULD PROBABLY JUST BE "ELSE", OTHERWISE YOU MAY FIND YOUR ROBOT DANCING BETWEEN 150 AND 155 BUT NEVER ACTUALLY STOPPING
   {
   	motor[X2Y1] = 0;
   	motor[X1Y1] = 0;
   	motor[X1Y2] = 0;
   	motor[X2Y2] = 0;
   }
+	
+/* SOME THINGS TO CONSIDER:
+
+1) ARC LENGTH:
+	C_WHEEL =<WHEEL DIAMETER>*PI
+	C_ROBOT = <ROBOT DIAMETER>*PI
+	ROTATIONS_NEEDED = C_ROBOT * (<ANGLE TO TURN>/360) / C_WHEEL
+
+2) PROPORTIONAL CONTROL:
+	WHILE ROTATIONS < ROTATIONS_NEEDED-0.1 OR ROTATIONS > ROTATIONS_NEEDED+0.1
+		IF ROTATIONS_NEEDED-ROTATIONS < 1
+			MOTOR_SPEED = 10*(ROTATIONS_NEEDED-ROTATIONS)
+		ELSE
+			MOTOR_SPEED = SPEED
+	TURN OFF MOTOR
 }
 
 void doauton ()
