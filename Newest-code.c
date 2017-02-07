@@ -137,9 +137,19 @@ void raisearmfull ()
 	wait1Msec(1000);
 }
 
+void openclaw ()
+{
+	motor[Claw1] = 120;
+	motor[Claw2] = 120;
+	wait1Msec(100);
+}
+
 void doauton ()
 {
-	raisearmfull ();
+	openclaw ();
+	wait1Msec(1000);
+  raisearmfull ();
+  drive (100,0, 127);
 }
 
 
