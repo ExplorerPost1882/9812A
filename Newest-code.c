@@ -141,7 +141,10 @@ void openclaw ()
 {
 	motor[Claw1] = 120;
 	motor[Claw2] = 120;
-	wait1Msec(100);
+	wait1Msec(200);
+	motor[Claw1] = 0;
+	motor[Claw2] = 0;
+
 }
 
 void doauton ()
@@ -149,7 +152,28 @@ void doauton ()
 	openclaw ();
 	wait1Msec(1000);
   raisearmfull ();
-  drive (100,0, 127);
+  motor[Claw1] = -127;
+  motor[Claw2] = -127;
+  wait1Msec(100);
+  motor[Claw1] = 0;
+  motor[Claw2] = 0;
+  wait1Msec(200);
+  motor[Claw1] = 127;
+  motor[Claw2] = 127;
+  wait1Msec(100);
+  motor[Claw1] = 0;
+  motor[Claw2] = 0;
+  motor[Arm1D] = 127;
+  motor[Arm1U] = 127;
+  motor[Arm2D] = 127;
+  motor[Arm2U] = 127;
+  wait1Msec(200);
+  motor[Arm1D] = 0;
+  motor[Arm1U] = 0;
+  motor[Arm2D] = 0;
+  motor[Arm2U] = 0;
+  drive (250,0, 127);
+  drive(30, 180, 127);
 }
 
 
