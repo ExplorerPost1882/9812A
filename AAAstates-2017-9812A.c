@@ -147,38 +147,19 @@ void openclaw ()
 	motor[Claw2] = 0;
 
 }
-//PLEASE EDIT >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//AUTON >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 void doauton ()
 {
 	openclaw ();//claw opens
 	wait1Msec(1000);
   raisearmfull ();//arm raises
-  /*motor[Claw1] = -127;//claw closes to drop it downn
-  motor[Claw2] = -127;
-  wait1Msec(180);
-  motor[Claw1] = 0;//stops claw
-  motor[Claw2] = 0;
-  wait1Msec(200);
-  motor[Claw1] = 127;//claw opens back up
-  motor[Claw2] = 127;
-  wait1Msec(100);
-  motor[Claw1] = 0;//stops claw
-  motor[Claw2] = 0;
-  motor[Arm1D] = 127;//arm raises to bring back up
-  motor[Arm1U] = 127;
-  motor[Arm2D] = 127;
-  motor[Arm2U] = 127;
-  wait1Msec(200);
-  motor[Arm1D] = 0;//stops arm
-  motor[Arm1U] = 0;
-  motor[Arm2D] = 0;
-  motor[Arm2U] = 0;*/
+
   drive (40, 270, 127);//drives sideways
   drive (50, 0, 127);//drives forward and back to drop claw
   drive (10, 180, 127);
   stopmotors ();//stops all motors
   openclaw ();//claw opens
-  //stopmotors () ;
+
   motor[Claw1] = 70;
   motor[Claw2] = 70;
   drive (140,0, 127);//drives forwards to knock off stars
@@ -192,7 +173,7 @@ void doauton ()
 	motor[X1Y1] = 0;
 	motor[X2Y2] = 0;
 	motor[X1Y2] = 0;
-  //openclaw ();
+
   drive (112,0,127);
   drive(140, 180, 127);//drives back
   motor[Claw1] = 0;
@@ -200,7 +181,7 @@ void doauton ()
 
 
 }
-//PLEASE EDIT ^
+//AUTON ^
 
 
 //AUTONOMOUS-------------------------------------------------------------------------
