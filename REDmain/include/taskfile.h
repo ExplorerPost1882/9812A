@@ -12,4 +12,12 @@ void TrayLift ();
 
 void TrayLower ();
 
+void TrayLiftSlow ();
+
 void CubeLoadRev();
+
+void ArmLift();
+
+void ArmLower();
+
+void ArmStop();

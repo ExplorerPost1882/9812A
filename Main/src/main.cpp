@@ -34,46 +34,47 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
-  // Drive up to cubes
-  Left.setVelocity(75, velocityUnits::pct);
-  Right.setVelocity(75, velocityUnits::pct);
-  Left.spinFor(1, turns, false);
-  Right.spinFor(1, turns, true);
-  // Spin treads to load first cube
-  LeftTread.setVelocity(100, velocityUnits::pct);
-  RightTread.setVelocity(100, velocityUnits::pct);
-  LeftTread.spinFor(3, turns, false);
-  RightTread.spinFor(3, turns, true);
-  // Drive up to second cube
-  Left.setVelocity(50, velocityUnits::pct);
-  Right.setVelocity(50, velocityUnits::pct);
-  Left.spinFor(.5, turns, false);
-  Right.spinFor(.5, turns, true);
-  // Spin treads to load second cube
-  LeftTread.setVelocity(100, velocityUnits::pct);
-  RightTread.setVelocity(100, velocityUnits::pct);
-  LeftTread.spinFor(20, turns, false);
-  RightTread.spinFor(20, turns, false);
+  //Spin up pre-load
+  LeftTread.setVelocity(75, velocityUnits::pct);
+  RightTread.setVelocity(75, velocityUnits::pct);
+  LeftTread.spinFor(6, turns, false);
+  RightTread.spinFor(6, turns, false);
+  //wait
   wait(200, msec);
-  // Turn to prepare to stack cubes
+  // Drive up to cubes
+  Left.setVelocity(30, velocityUnits::pct);
+  Right.setVelocity(30, velocityUnits::pct);
+  Left.spinFor(1.75, turns, false);
+  Right.spinFor(1.75, turns, true);
+  //Turn to next cube
+  Left.setVelocity(30, velocityUnits::pct);
+  Right.setVelocity(30, velocityUnits::pct);
+  Left.spinFor(1, turns, false);
+  Right.spinFor(-1, turns, true);
+ //drive up to next cube
+  Left.setVelocity(30, velocityUnits::pct);
+  Right.setVelocity(30, velocityUnits::pct);
+  Left.spinFor(.75, turns, false);
+  Right.spinFor(.75, turns, false);
+  wait(200, msec);
+ // Turn to prepare to stack cubes
   Left.setVelocity(50, velocityUnits::pct);
   Right.setVelocity(50, velocityUnits::pct);
-  Left.spinFor(-1.458, turns, false);
-  Right.spinFor(1.458, turns, true);
+  Left.spinFor(0.796875, turns, false);
+  Right.spinFor(-0.796875, turns, true);
   // Drive up to goal zone
   Left.setVelocity(60, velocityUnits::pct);
   Right.setVelocity(60, velocityUnits::pct);
-  Left.spinFor(7, turns, false);
-  Right.spinFor(7, turns, false);
-  wait(500, msec);
+  Left.spinFor(1, turns, false);
+  Right.spinFor(1, turns, true);
   // Lift tray
   TrayLift();
   // Spin flaps down to release cubes
   LeftTread.setVelocity(100, velocityUnits::pct);
   RightTread.setVelocity(100, velocityUnits::pct);
-  LeftTread.spinFor(-20, turns, false);
-  RightTread.spinFor(-20, turns, false);
-  wait(5000, msec);
+  LeftTread.spinFor(-10, turns, false);
+  RightTread.spinFor(-10, turns, false);
+  wait(300, msec);
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
