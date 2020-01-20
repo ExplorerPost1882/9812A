@@ -42,8 +42,8 @@ void Drive() {
 
 // Spins flipping arms to load cube into tray
 void CubeLoad() {
-  LeftTread.setVelocity(75, velocityUnits::pct);
-  RightTread.setVelocity(75, velocityUnits::pct);
+  LeftTread.setVelocity(100, velocityUnits::pct);
+  RightTread.setVelocity(100, velocityUnits::pct);
 
   LeftTread.spin(forward);
   RightTread.spin(forward);
@@ -63,20 +63,31 @@ void CubeLoadStop() {
   LeftTread.setVelocity(0, velocityUnits::pct);
   RightTread.setVelocity(0, velocityUnits::pct);
 }
+
+bool armsStopped = true;
+
 // lift arms to lift cubes
 void ArmLift() {
+  LeftArm.setPosition(0, turns);
+  RightArm.setPosition(0, turns);
   // Set speed of arms
   LeftArm.setVelocity(50, velocityUnits::pct);
   RightArm.setVelocity(50, velocityUnits::pct);
   // spin arms to lift
   LeftArm.spin(forward);
   RightArm.spin(forward);
+  armsStopped = false;
+
+  while(!armsStopped){
+    LeftArm.setVelocity(50.0 + RightArm.position(degrees) - LeftArm.position(degrees), velocityUnits::pct);
+    RightArm.setVelocity(50.0 + LeftArm.position(degrees) - RightArm.position(degrees), velocityUnits::pct);   
+  }
 }
 // lower arms to lower cubes
 void ArmLower() {
   // Set speed of arms
-  LeftArm.setVelocity(50, velocityUnits::pct);
-  RightArm.setVelocity(50, velocityUnits::pct);
+  LeftArm.setVelocity(25, velocityUnits::pct);
+  RightArm.setVelocity(25, velocityUnits::pct);
   // spin arms to lower
   LeftArm.spin(reverse);
   RightArm.spin(reverse);
@@ -87,6 +98,7 @@ void ArmStop() {
   RightArm.setStopping(hold);
   LeftArm.stop();
   RightArm.stop();
+  armsStopped = true;
 }
 // lift the tray to drop the cubes
 void TrayLift() {
@@ -94,7 +106,17 @@ void TrayLift() {
     wait(100, msec);
   } else {
     Tray.setVelocity(100, velocityUnits::pct);
-    Tray.spinToPosition(-890, rotationUnits::deg);
+    Tray.spinToPosition(-880, rotationUnits::deg);
+  }
+}
+
+// lift the tray slowly to drop the cubes
+void TrayLiftSlow() {
+  if (Tray.position(degrees) == 900) {
+    wait(100, msec);
+  } else {
+    Tray.setVelocity(50, velocityUnits::pct);
+    Tray.spinToPosition(-880, rotationUnits::deg);
   }
 }
 

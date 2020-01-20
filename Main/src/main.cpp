@@ -112,7 +112,7 @@ void usercontrol(void) {
     Controller1.ButtonL1.released(ArmStop);
     //Stop moving arm down
     Controller1.ButtonL2.released(ArmStop);
-
+Controller1.ButtonLeft.pressed(TrayLiftSlow);
     // wait
     wait(250, msec);
   }
