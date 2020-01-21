@@ -2,6 +2,19 @@
 
 using namespace vex;
 
+// Diameter of base (diagonal from wheel to wheel)-INCHES
+const double DB = 25.5; 
+ // Diameter of wheels-INCHES
+const double DW = 4;   
+
+// finds circumfrence of turn
+const double CB = (DB * M_PI);
+// finds circumfrence of wheels, also being how far it travels in one rotation
+const double CW = (DW * M_PI);
+
+// variable to make one full rotation
+const double RotationsToTurn360 = (CB / CW);
+
 void Drive() {
 
   int deadband = 5;
@@ -40,22 +53,19 @@ void Drive() {
   }
 }
 
+//Spin treads in to pick up and drop cubes. Use a negative velocity to spin flaps down
+void SpinFlaps(double speed){
+  LeftTread.spin(forward, speed, velocityUnits::pct);
+  RightTread.spin(forward, speed, velocityUnits::pct); 
+}
 // Spins flipping arms to load cube into tray
 void CubeLoad() {
-  LeftTread.setVelocity(100, velocityUnits::pct);
-  RightTread.setVelocity(100, velocityUnits::pct);
-
-  LeftTread.spin(forward);
-  RightTread.spin(forward);
+  SpinFlaps(100);
 }
 
 // spins flippers down to unload cubes
 void CubeLoadRev() {
-  LeftTread.setVelocity(75, velocityUnits::pct);
-  RightTread.setVelocity(75, velocityUnits::pct);
-
-  LeftTread.spin(reverse);
-  RightTread.spin(reverse);
+  SpinFlaps(-75);
 }
 
 // stops spinning the flippers
@@ -78,9 +88,13 @@ void ArmLift() {
   RightArm.spin(forward);
   armsStopped = false;
 
-  while(!armsStopped){
-    LeftArm.setVelocity(50.0 + RightArm.position(degrees) - LeftArm.position(degrees), velocityUnits::pct);
-    RightArm.setVelocity(50.0 + LeftArm.position(degrees) - RightArm.position(degrees), velocityUnits::pct);   
+  while (!armsStopped) {
+    LeftArm.setVelocity(50.0 + RightArm.position(degrees) -
+                            LeftArm.position(degrees),
+                        velocityUnits::pct);
+    RightArm.setVelocity(50.0 + LeftArm.position(degrees) -
+                             RightArm.position(degrees),
+                         velocityUnits::pct);
   }
 }
 // lower arms to lower cubes
@@ -128,4 +142,19 @@ void TrayLower() {
     Tray.setVelocity(100, velocityUnits::pct);
     Tray.spinToPosition(0, rotationUnits::deg);
   }
+}
+
+// Turn the robot a number of degrees. Positive is Right, Negative is Left
+void Turn(double degrees, double speed) {
+  double fractionOfTurns = degrees / 360.0;
+  double rotationsToTurnDegreesGiven = fractionOfTurns * RotationsToTurn360;
+  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, false);
+  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, true);
+}
+
+// Drive the robot a number of inches. Distance is in inches, speed is in percent. Drive back using a negative velocity
+void Drive(double distance, double speed){
+  double rotations = distance/CW;
+  Left.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, false);
+  Right.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, true);
 }

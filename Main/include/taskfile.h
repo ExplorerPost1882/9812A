@@ -21,3 +21,9 @@ void ArmLift();
 void ArmLower();
 
 void ArmStop();
+
+void Turn(double degrees, double speed);
+
+void Drive(double distance, double speed);
+
+void SpinTreads(double speed);

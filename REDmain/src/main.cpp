@@ -10,14 +10,14 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// Left                 motor         1               
-// Right                motor         4               
-// Tray                 motor         6               
-// LeftTread            motor         7               
-// RightTread           motor         8               
-// LeftArm              motor         2               
-// RightArm             motor         3               
+// Controller1          controller
+// Left                 motor         1
+// Right                motor         4
+// Tray                 motor         6
+// LeftTread            motor         7
+// RightTread           motor         8
+// LeftArm              motor         2
+// RightArm             motor         3
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "taskfile.h"
@@ -34,59 +34,35 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
-  //Spin up pre-load
-  LeftTread.setVelocity(75, velocityUnits::pct);
-  RightTread.setVelocity(75, velocityUnits::pct);
-  LeftTread.spinFor(6, turns, false);
-  RightTread.spinFor(6, turns, false);
-  //wait
+  // Spin up pre-load
+  SpinTreads(100);
+  // wait
   wait(200, msec);
   // Drive up to cubes
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(1.75, turns, false);
-  Right.spinFor(1.75, turns, true);
-  //Turn to next cube
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(-1, turns, false);
-  Right.spinFor(1, turns, true);
- //drive up to next cube
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(.75, turns, false);
-  Right.spinFor(.75, turns, false);
+  Drive(21.98, 30);
+  // Turn to next cube
+  Turn(90, 50);
+  // Drive up to next cube
+  Drive(9.42, 30);
   wait(200, msec);
- // Turn to prepare to stack cubes
-  Left.setVelocity(50, velocityUnits::pct);
-  Right.setVelocity(50, velocityUnits::pct);
-  Left.spinFor(-0.796875, turns, false);
-  Right.spinFor(0.796875, turns, true);
+  // Turn to prepare to stack cubes
+  Turn(45, 50);
   // Drive up to goal zone
-  Left.setVelocity(60, velocityUnits::pct);
-  Right.setVelocity(60, velocityUnits::pct);
-  Left.spinFor(1, turns, false);
-  Right.spinFor(1, turns, true);
+  Drive(12.56, 60);
   // Lift tray
   TrayLift();
   // Spin flaps down to release cubes
-  LeftTread.setVelocity(100, velocityUnits::pct);
-  RightTread.setVelocity(100, velocityUnits::pct);
-  LeftTread.spinFor(-10, turns, false);
-  RightTread.spinFor(-10, turns, false);
+  SpinTreads(-75);
   wait(300, msec);
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
-  Left.setVelocity(60, velocityUnits::pct);
-  Right.setVelocity(60, velocityUnits::pct);
-  Left.spinFor(-2, turns, false);
-  Right.spinFor(-2, turns, true);
+  Drive(25.12, 670);
 }
 
 void usercontrol(void) {
   // reset tray position
-  //Tray.setPosition(0, degrees);
+  // Tray.setPosition(0, degrees);
 
   while (true) {
     // Drive left
@@ -105,15 +81,16 @@ void usercontrol(void) {
     Controller1.ButtonR2.pressed(CubeLoadRev);
     // Stop cube unloading
     Controller1.ButtonR2.released(CubeLoadStop);
-    //Lift arm
+    // Lift arm
     Controller1.ButtonL1.pressed(ArmLift);
-    //LowerArm
+    // LowerArm
     Controller1.ButtonL2.pressed(ArmLower);
-    //Stop moving arm up
+    // Stop moving arm up
     Controller1.ButtonL1.released(ArmStop);
-    //Stop moving arm down
+    // Stop moving arm down
     Controller1.ButtonL2.released(ArmStop);
-Controller1.ButtonLeft.pressed(TrayLiftSlow);
+    //slower lift when stacking cubes to not fling them out of the stack
+    Controller1.ButtonLeft.pressed(TrayLiftSlow);
     // wait
     wait(250, msec);
   }

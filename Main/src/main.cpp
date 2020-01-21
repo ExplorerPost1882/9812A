@@ -35,53 +35,30 @@ void pre_auton(void) {
 
 void autonomous(void) {
   //Spin up pre-load
-  LeftTread.setVelocity(75, velocityUnits::pct);
-  RightTread.setVelocity(75, velocityUnits::pct);
-  LeftTread.spinFor(6, turns, false);
-  RightTread.spinFor(6, turns, false);
+  SpinTreads(100);
   //wait
   wait(200, msec);
   // Drive up to cubes
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(1.75, turns, false);
-  Right.spinFor(1.75, turns, true);
+  Drive(21.98, 30);
   //Turn to next cube
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(1, turns, false);
-  Right.spinFor(-1, turns, true);
- //drive up to next cube
-  Left.setVelocity(30, velocityUnits::pct);
-  Right.setVelocity(30, velocityUnits::pct);
-  Left.spinFor(.75, turns, false);
-  Right.spinFor(.75, turns, false);
+  Turn(90, 50);
+  //drive forward to next cube
+  Drive(9.42, 30);
   wait(200, msec);
  // Turn to prepare to stack cubes
-  Left.setVelocity(50, velocityUnits::pct);
-  Right.setVelocity(50, velocityUnits::pct);
-  Left.spinFor(0.796875, turns, false);
-  Right.spinFor(-0.796875, turns, true);
+  Turn(45, 50);
   // Drive up to goal zone
-  Left.setVelocity(60, velocityUnits::pct);
-  Right.setVelocity(60, velocityUnits::pct);
-  Left.spinFor(1, turns, false);
-  Right.spinFor(1, turns, true);
+  Drive(12.56, 60);
   // Lift tray
   TrayLift();
   // Spin flaps down to release cubes
-  LeftTread.setVelocity(100, velocityUnits::pct);
-  RightTread.setVelocity(100, velocityUnits::pct);
-  LeftTread.spinFor(-10, turns, false);
-  RightTread.spinFor(-10, turns, false);
+  SpinTreads(-75);
+  // Wait for 3 secs to give the cubes a chance to stack before backing out
   wait(300, msec);
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
-  Left.setVelocity(60, velocityUnits::pct);
-  Right.setVelocity(60, velocityUnits::pct);
-  Left.spinFor(-2, turns, false);
-  Right.spinFor(-2, turns, true);
+  Drive(25.12, -60);
 }
 
 void usercontrol(void) {
