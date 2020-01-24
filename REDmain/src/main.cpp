@@ -34,30 +34,39 @@ void pre_auton(void) {
 }
 
 void autonomous(void) {
-  // Spin up pre-load
+  //Spin up pre-load
   SpinTreads(100);
-  // wait
+  //wait
   wait(200, msec);
   // Drive up to cubes
   Drive(21.98, 30);
-  // Turn to next cube
-  Turn(90, 50);
-  // Drive up to next cube
-  Drive(9.42, 30);
+  //Turn to next cube
+  Turn(-90, 50);
+  //drive forward to next cube
+  Drive(15, 30);
   wait(200, msec);
-  // Turn to prepare to stack cubes
-  Turn(45, 50);
-  // Drive up to goal zone
-  Drive(12.56, 60);
+ // Turn to prepare to stack cubes
+  Turn(-45, 50);
+  // Drive up to wall to line up
+  Drive(12.56, 30);
+  //back up a little bit to line up to stack
+  Drive(-2, 30);
+  //Turn a slight bit to line up
+  Turn(25, 30);
+  //drive into goal zone
+  Drive(12, 75);
   // Lift tray
-  TrayLift();
+  TrayLiftSlow();
   // Spin flaps down to release cubes
   SpinTreads(-75);
+  // Wait for 3 secs to give the cubes a chance to stack before backing out
   wait(300, msec);
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
-  Drive(25.12, 670);
+  Drive(-25.12, 100);
+  //turn treads off
+  CubeLoadStop();
 }
 
 void usercontrol(void) {

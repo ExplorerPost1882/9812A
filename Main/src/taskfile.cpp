@@ -3,9 +3,9 @@
 using namespace vex;
 
 // Diameter of base (diagonal from wheel to wheel)-INCHES
-const double DB = 25.5; 
+const double DB = 17; 
  // Diameter of wheels-INCHES
-const double DW = 4;   
+const double DW = 4.125;   
 
 // finds circumfrence of turn
 const double CB = (DB * M_PI);
@@ -54,18 +54,18 @@ void Drive() {
 }
 
 //Spin treads in to pick up and drop cubes. Use a negative velocity to spin flaps down
-void SpinFlaps(double speed){
+void SpinTreads(double speed){
   LeftTread.spin(forward, speed, velocityUnits::pct);
   RightTread.spin(forward, speed, velocityUnits::pct); 
 }
 // Spins flipping arms to load cube into tray
 void CubeLoad() {
-  SpinFlaps(100);
+  SpinTreads(100);
 }
 
 // spins flippers down to unload cubes
 void CubeLoadRev() {
-  SpinFlaps(-75);
+  SpinTreads(-75);
 }
 
 // stops spinning the flippers

@@ -3,9 +3,9 @@
 using namespace vex;
 
 // Diameter of base (diagonal from wheel to wheel)-INCHES
-const double DB = 25.5;
+const double DB = 17;
 // Diameter of wheels-INCHES
-const double DW = 4;
+const double DW = 4.125;
 
 // finds circumfrence of turn
 const double CB = (DB * M_PI);
