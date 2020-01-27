@@ -54,7 +54,7 @@ void autonomous(void) {
   //Turn a slight bit to line up
   Turn(25, 30);
   //drive into goal zone
-  Drive(12, 75);
+  Drive(14, 75);
   // Lift tray
   TrayLiftSlow();
   // Spin flaps down to release cubes

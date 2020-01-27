@@ -43,7 +43,7 @@ void autonomous(void) {
   //Turn to next cube
   Turn(90, 50);
   //drive forward to next cube
-  Drive(15, 30);
+  Drive(16, 30);
   wait(200, msec);
  // Turn to prepare to stack cubes
   Turn(45, 50);

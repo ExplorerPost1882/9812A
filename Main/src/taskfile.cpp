@@ -120,7 +120,7 @@ void TrayLift() {
     wait(100, msec);
   } else {
     Tray.setVelocity(100, velocityUnits::pct);
-    Tray.spinToPosition(-880, rotationUnits::deg);
+    Tray.spinToPosition(-850, rotationUnits::deg);
   }
 }
 
@@ -130,7 +130,7 @@ void TrayLiftSlow() {
     wait(100, msec);
   } else {
     Tray.setVelocity(50, velocityUnits::pct);
-    Tray.spinToPosition(-880, rotationUnits::deg);
+    Tray.spinToPosition(-850, rotationUnits::deg);
   }
 }
 
@@ -140,7 +140,7 @@ void TrayLower() {
     wait(100, msec);
   } else {
     Tray.setVelocity(100, velocityUnits::pct);
-    Tray.spinToPosition(0, rotationUnits::deg);
+    Tray.spinToPosition(-30, rotationUnits::deg);
   }
 }
 
