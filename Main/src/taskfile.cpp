@@ -1,11 +1,12 @@
 #include "vex.h"
+extern vision Vision1;
 
 using namespace vex;
 
 // Diameter of base (diagonal from wheel to wheel)-INCHES
-const double DB = 17; 
- // Diameter of wheels-INCHES
-const double DW = 4.125;   
+const double DB = 17;
+// Diameter of wheels-INCHES
+const double DW = 4.125;
 
 // finds circumfrence of turn
 const double CB = (DB * M_PI);
@@ -53,20 +54,17 @@ void Drive() {
   }
 }
 
-//Spin treads in to pick up and drop cubes. Use a negative velocity to spin flaps down
-void SpinTreads(double speed){
+// Spin treads in to pick up and drop cubes. Use a negative velocity to spin
+// flaps down
+void SpinTreads(double speed) {
   LeftTread.spin(forward, speed, velocityUnits::pct);
-  RightTread.spin(forward, speed, velocityUnits::pct); 
+  RightTread.spin(forward, speed, velocityUnits::pct);
 }
 // Spins flipping arms to load cube into tray
-void CubeLoad() {
-  SpinTreads(100);
-}
+void CubeLoad() { SpinTreads(100); }
 
 // spins flippers down to unload cubes
-void CubeLoadRev() {
-  SpinTreads(-75);
-}
+void CubeLoadRev() { SpinTreads(-75); }
 
 // stops spinning the flippers
 void CubeLoadStop() {
@@ -81,8 +79,8 @@ void ArmLift() {
   LeftArm.setPosition(0, turns);
   RightArm.setPosition(0, turns);
   // Set speed of arms
-  LeftArm.setVelocity(50, velocityUnits::pct);
-  RightArm.setVelocity(50, velocityUnits::pct);
+  LeftArm.setVelocity(25, velocityUnits::pct);
+  RightArm.setVelocity(25, velocityUnits::pct);
   // spin arms to lift
   LeftArm.spin(forward);
   RightArm.spin(forward);
@@ -148,13 +146,92 @@ void TrayLower() {
 void Turn(double degrees, double speed) {
   double fractionOfTurns = degrees / 360.0;
   double rotationsToTurnDegreesGiven = fractionOfTurns * RotationsToTurn360;
-  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, false);
-  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, true);
+  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
+               velocityUnits::pct, false);
+  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
+                velocityUnits::pct, true);
 }
 
-// Drive the robot a number of inches. Distance is in inches, speed is in percent. Drive back using a negative velocity
-void Drive(double distance, double speed){
-  double rotations = distance/CW;
-  Left.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, false);
-  Right.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, true);
+// Drive the robot a number of inches. Distance is in inches, speed is in
+// percent. Drive back using a negative velocity
+void Drive(double distance, double speed) {
+  double rotations = distance / CW;
+  Left.spinFor(forward, rotations, rotationUnits::rev, speed,
+               velocityUnits::pct, false);
+  Right.spinFor(forward, rotations, rotationUnits::rev, speed,
+                velocityUnits::pct, true);
+}
+// Doing the vision test for the drive at cube function
+bool visionTest(vision::signature SIG) {
+  Vision1.takeSnapshot(SIG);
+  return Vision1.largestObject.exists && Vision1.largestObject.width > 5;
+}
+
+// Dirve to a specific cube
+void DriveAtCube(double distance, int speed, vision::signature SIG) {
+
+  const int middle = 316 / 2;
+  const int dead = 20;
+
+  int left = speed;
+  int right = speed;
+
+  if (visionTest(GREEN_CUBE)) {
+    Brain.Screen.setPenColor(vex::color::white);
+    Brain.Screen.setFillColor(vex::color::green);
+    Brain.Screen.drawRectangle(0, 0, 480, 240);
+    Brain.Screen.setCursor(2, 2);
+    Brain.Screen.setFont(vex::fontType::mono40);
+
+    int x = Vision1.largestObject.centerX;
+    int diff = middle - x;
+    if (abs(diff) > dead) {
+      left = left - diff;
+    } else {
+      left = speed;
+    }
+
+    Left.spinFor(distance, rotationUnits::rev, left, velocityUnits::pct);
+    Right.spinFor(distance, rotationUnits::rev, right, velocityUnits::pct);
+
+  } else if (visionTest(PURPLE_CUBE)) {
+    Brain.Screen.setPenColor(vex::color::white);
+    Brain.Screen.setFillColor(vex::color::purple);
+    Brain.Screen.drawRectangle(0, 0, 480, 240);
+    Brain.Screen.setCursor(2, 2);
+    Brain.Screen.setFont(vex::fontType::mono40);
+
+    int x = Vision1.largestObject.centerX;
+    int diff = middle - x;
+    if (abs(diff) > dead) {
+      left = left - diff;
+    } else {
+      left = speed;
+    }
+
+    Left.spinFor(distance, rotationUnits::rev, left, velocityUnits::pct);
+    Right.spinFor(distance, rotationUnits::rev, right, velocityUnits::pct);
+
+  } else if (visionTest(ORANGE_CUBE)) {
+    Brain.Screen.setPenColor(vex::color::white);
+    Brain.Screen.setFillColor(vex::color::orange);
+    Brain.Screen.drawRectangle(0, 0, 480, 240);
+    Brain.Screen.setCursor(2, 2);
+    Brain.Screen.setFont(vex::fontType::mono40);
+
+    int x = Vision1.largestObject.centerX;
+    int diff = middle - x;
+    if (abs(diff) > dead) {
+      left = left - diff;
+    } else {
+      left = speed;
+    }
+
+    Left.spinFor(distance, rotationUnits::rev, left, velocityUnits::pct);
+    Right.spinFor(distance, rotationUnits::rev, right, velocityUnits::pct);
+
+  } else {
+    Brain.Screen.clearScreen();
+  }
+  task::sleep(100);
 }
