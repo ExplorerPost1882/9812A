@@ -27,5 +27,3 @@ void Turn(double degrees, double speed);
 void Drive(double distance, double speed);
 
 void SpinTreads(double speed);
-
-void DriveAtCube(double distance, double speed, vision::signature SIG);

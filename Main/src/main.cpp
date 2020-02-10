@@ -1,16 +1,3 @@
-// ---- START VEXCODE CONFIGURED DEVICES ----
-// Robot Configuration:
-// [Name]               [Type]        [Port(s)]
-// Controller1          controller                    
-// Left                 motor         1               
-// Right                motor         4               
-// Tray                 motor         6               
-// LeftTread            motor         7               
-// RightTread           motor         8               
-// LeftArm              motor         2               
-// RightArm             motor         3               
-// Vision1              vision        5               
-// ---- END VEXCODE CONFIGURED DEVICES ----
 /*----------------------------------------------------------------------------*/
 /*                                                                            */
 /*    Module:       main.cpp                                                  */
@@ -33,14 +20,10 @@
 // RightArm             motor         3               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
-#include "vex.h"
 #include "taskfile.h"
+#include "vex.h"
 
 using namespace vex;
-extern vision Vision1;
-extern signature GREEN_CUBE;
-extern signature PURPLE_CUBE;
-extern signature ORANGE_CUBE;
 
 competition Competition;
 
@@ -55,12 +38,12 @@ void autonomous(void) {
   SpinTreads(100);
   //wait
   wait(200, msec);
-  // Drive up to the green cube ahead
-  DriveAtCube(21.98, 30, GREEN_CUBE);
+  // Drive up to cubes
+  Drive(21.98, 30);
   //Turn to next cube
   Turn(90, 50);
-  //drive forward to next green cube
-  DriveAtCube(16, 30, GREEN_CUBE);
+  //drive forward to next cube
+  Drive(16, 30);
   wait(200, msec);
  // Turn to prepare to stack cubes
   Turn(45, 50);
