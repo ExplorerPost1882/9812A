@@ -16,6 +16,12 @@ motor LeftTread = motor(PORT7, ratio36_1, false);
 motor RightTread = motor(PORT8, ratio36_1, true);
 motor LeftArm = motor(PORT2, ratio36_1, false);
 motor RightArm = motor(PORT3, ratio36_1, true);
+/*vex-vision-config:begin*/
+signature Vision1__PURPLE_CUBE = signature (1, 951, 1805, 1378, 5183, 7615, 6398, 2.5, 0);
+signature Vision1__ORANGE_CUBE = signature (2, 2431, 5279, 3854, -2403, -1727, -2064, 0.8, 0);
+signature Vision1__GREEN_CUBE = signature (3, -7311, -5851, -6580, -3581, -2319, -2950, 2.5, 0);
+vision Vision1 = vision (PORT5, 42, Vision1__PURPLE_CUBE, Vision1__ORANGE_CUBE, Vision1__GREEN_CUBE);
+/*vex-vision-config:end*/
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

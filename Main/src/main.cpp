@@ -18,6 +18,7 @@
 // RightTread           motor         8               
 // LeftArm              motor         2               
 // RightArm             motor         3               
+// Vision1              vision        5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "taskfile.h"
@@ -39,11 +40,11 @@ void autonomous(void) {
   //wait
   wait(200, msec);
   // Drive up to cubes
-  Drive(21.98, 30);
+  DriveAtCube(21.98, 30, Vision1__GREEN_CUBE);
   //Turn to next cube
   Turn(90, 50);
   //drive forward to next cube
-  Drive(16, 30);
+  DriveAtCube(16, 30, Vision1__GREEN_CUBE);
   wait(200, msec);
  // Turn to prepare to stack cubes
   Turn(45, 50);
@@ -68,6 +69,11 @@ void autonomous(void) {
   //turn treads off
   CubeLoadStop();
 }
+
+void TEST(){
+  DriveAtCube(36, 25, Vision1__GREEN_CUBE);
+}
+
 
 void usercontrol(void) {
   // reset tray position
@@ -99,6 +105,8 @@ void usercontrol(void) {
     //Stop moving arm down
     Controller1.ButtonL2.released(ArmStop);
 Controller1.ButtonLeft.pressed(TrayLiftSlow);
+
+Controller1.ButtonX.pressed(TEST);
     // wait
     wait(250, msec);
   }

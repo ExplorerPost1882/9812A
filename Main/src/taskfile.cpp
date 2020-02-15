@@ -3,9 +3,9 @@
 using namespace vex;
 
 // Diameter of base (diagonal from wheel to wheel)-INCHES
-const double DB = 17; 
- // Diameter of wheels-INCHES
-const double DW = 4.125;   
+const double DB = 17;
+// Diameter of wheels-INCHES
+const double DW = 4.125;
 
 // finds circumfrence of turn
 const double CB = (DB * M_PI);
@@ -53,20 +53,17 @@ void Drive() {
   }
 }
 
-//Spin treads in to pick up and drop cubes. Use a negative velocity to spin flaps down
-void SpinTreads(double speed){
+// Spin treads in to pick up and drop cubes. Use a negative velocity to spin
+// flaps down
+void SpinTreads(double speed) {
   LeftTread.spin(forward, speed, velocityUnits::pct);
-  RightTread.spin(forward, speed, velocityUnits::pct); 
+  RightTread.spin(forward, speed, velocityUnits::pct);
 }
 // Spins flipping arms to load cube into tray
-void CubeLoad() {
-  SpinTreads(100);
-}
+void CubeLoad() { SpinTreads(100); }
 
 // spins flippers down to unload cubes
-void CubeLoadRev() {
-  SpinTreads(-75);
-}
+void CubeLoadRev() { SpinTreads(-75); }
 
 // stops spinning the flippers
 void CubeLoadStop() {
@@ -81,21 +78,11 @@ void ArmLift() {
   LeftArm.setPosition(0, turns);
   RightArm.setPosition(0, turns);
   // Set speed of arms
-  LeftArm.setVelocity(50, velocityUnits::pct);
-  RightArm.setVelocity(50, velocityUnits::pct);
+  LeftArm.setVelocity(25, velocityUnits::pct);
+  RightArm.setVelocity(25, velocityUnits::pct);
   // spin arms to lift
   LeftArm.spin(forward);
   RightArm.spin(forward);
-  armsStopped = false;
-
-  while (!armsStopped) {
-    LeftArm.setVelocity(50.0 + RightArm.position(degrees) -
-                            LeftArm.position(degrees),
-                        velocityUnits::pct);
-    RightArm.setVelocity(50.0 + LeftArm.position(degrees) -
-                             RightArm.position(degrees),
-                         velocityUnits::pct);
-  }
 }
 // lower arms to lower cubes
 void ArmLower() {
@@ -130,7 +117,7 @@ void TrayLiftSlow() {
     wait(100, msec);
   } else {
     Tray.setVelocity(50, velocityUnits::pct);
-    Tray.spinToPosition(-850, rotationUnits::deg);
+    Tray.spinToPosition(-830, rotationUnits::deg);
   }
 }
 
@@ -148,13 +135,66 @@ void TrayLower() {
 void Turn(double degrees, double speed) {
   double fractionOfTurns = degrees / 360.0;
   double rotationsToTurnDegreesGiven = fractionOfTurns * RotationsToTurn360;
-  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, false);
-  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, true);
+  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
+               velocityUnits::pct, false);
+  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
+                velocityUnits::pct, true);
 }
 
-// Drive the robot a number of inches. Distance is in inches, speed is in percent. Drive back using a negative velocity
-void Drive(double distance, double speed){
-  double rotations = distance/CW;
-  Left.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, false);
-  Right.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, true);
+// Drive the robot a number of inches. Distance is in inches, speed is in
+// percent. Drive back using a negative velocity
+void Drive(double distance, double speed) {
+  double rotations = distance / CW;
+  Left.spinFor(forward, rotations, rotationUnits::rev, speed,
+               velocityUnits::pct, false);
+  Right.spinFor(forward, rotations, rotationUnits::rev, speed,
+                velocityUnits::pct, true);
+}
+
+// Doing the vision test for the drive at cube function
+bool visionTest(vision::signature SIG) {
+  Vision1.takeSnapshot(SIG);
+  return Vision1.largestObject.exists 
+        && Vision1.largestObject.width > 5
+        && Vision1.largestObject.height < 130;
+}
+
+// Dirve to a specific cube
+void DriveAtCube(double distance, double speed, vision::signature SIG) {
+  double rotations = distance / CW;
+
+  const int middle = 316 / 2 - 60;
+  const int dead = 5;
+
+  int leftSpeed = speed;
+  int rightSpeed = speed;
+
+  Right.resetRotation();
+
+  Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
+  Right.spin(directionType::fwd, rightSpeed, velocityUnits::pct);
+
+  while (Right.rotation(rotationUnits::rev) < rotations) {
+    if (visionTest(SIG)) {
+      Brain.Screen.setPenColor(vex::color::white);
+      Brain.Screen.setFillColor(vex::color::orange);
+      Brain.Screen.drawRectangle(0, 0, 480, 240);
+
+      int x = Vision1.largestObject.centerX;
+      int diff = middle - x;
+      if (abs(diff) > dead) {
+        leftSpeed = leftSpeed - diff/ 50;
+      } else {
+        leftSpeed = speed;
+      }
+      Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
+    } else {
+      Left.spin(directionType::fwd, speed, velocityUnits::pct);
+      Right.spin(directionType::fwd, speed, velocityUnits::pct);
+      Brain.Screen.clearScreen();
+    }
+    task::sleep(100);
+  }
+  Left.stop();
+  Right.stop();
 }
