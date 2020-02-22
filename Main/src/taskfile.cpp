@@ -84,6 +84,16 @@ void ArmLift() {
   LeftArm.spin(forward);
   RightArm.spin(forward);
 }
+
+//Lift arms in auto
+void ArmLiftAuto() {
+  LeftArm.setPosition(0, turns);
+  RightArm.setPosition(0, turns);
+  // spin arms to lift
+  LeftArm.spinTo(370, rotationUnits::deg, 25, velocityUnits::pct, false);
+  RightArm.spinTo(370, rotationUnits::deg, 25, velocityUnits::pct);
+}
+
 // lower arms to lower cubes
 void ArmLower() {
   // Set speed of arms
@@ -93,6 +103,14 @@ void ArmLower() {
   LeftArm.spin(reverse);
   RightArm.spin(reverse);
 }
+
+// lower arms in auto
+void ArmLowerAuto() {
+  // spin arms to lower
+  LeftArm.spinTo(370, rotationUnits::deg, -25, velocityUnits::pct, false);
+  RightArm.spinTo(370, rotationUnits::deg, -25, velocityUnits::pct);
+}
+
 // stop arms
 void ArmStop() {
   LeftArm.setStopping(hold);
@@ -101,18 +119,17 @@ void ArmStop() {
   RightArm.stop();
   armsStopped = true;
 }
-// lift the tray to drop the cubes
-void TrayLift() {
-  if (Tray.position(degrees) == 900) {
-    wait(100, msec);
-  } else {
-    Tray.setVelocity(100, velocityUnits::pct);
-    Tray.spinToPosition(-850, rotationUnits::deg);
-  }
+
+//turn off the motors to totally reset the arms
+void ArmReset(){
+  LeftArm.setStopping(coast);
+  RightArm.setStopping(coast);
+  LeftArm.stop();
+  RightArm.stop();
 }
 
-// lift the tray slowly to drop the cubes
-void TrayLiftSlow() {
+// lift the tray to drop the cubes
+void TrayLift() {
   if (Tray.position(degrees) == 900) {
     wait(100, msec);
   } else {

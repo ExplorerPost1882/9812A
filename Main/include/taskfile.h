@@ -8,19 +8,23 @@ void CubeLoad ();
 
 void CubeLoadStop();
 
-void TrayLift (); 
-
 void TrayLower ();
 
-void TrayLiftSlow ();
+void TrayLift ();
 
 void CubeLoadRev();
 
 void ArmLift();
 
+void ArmLiftAuto();
+
 void ArmLower();
 
+void ArmLowerAuto();
+
 void ArmStop();
+
+void ArmReset();
 
 void Turn(double degrees, double speed);
 
