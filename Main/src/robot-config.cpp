@@ -22,6 +22,7 @@ signature Vision1__ORANGE_CUBE = signature (2, 2431, 5279, 3854, -2403, -1727, -
 signature Vision1__GREEN_CUBE = signature (3, -7311, -5851, -6580, -3581, -2319, -2950, 2.5, 0);
 vision Vision1 = vision (PORT5, 42, Vision1__PURPLE_CUBE, Vision1__ORANGE_CUBE, Vision1__GREEN_CUBE);
 /*vex-vision-config:end*/
+motor SideWheel = motor(PORT9, ratio36_1, true);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

@@ -10,14 +10,15 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// Left                 motor         1
-// Right                motor         4
-// Tray                 motor         6
-// LeftTread            motor         7
-// RightTread           motor         8
-// LeftArm              motor         2
-// RightArm             motor         3
+// Controller1          controller                    
+// Left                 motor         1               
+// Right                motor         4               
+// Tray                 motor         6               
+// LeftTread            motor         7               
+// RightTread           motor         8               
+// LeftArm              motor         2               
+// RightArm             motor         3               
+// SideWheel            motor         9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "taskfile.h"
@@ -55,10 +56,10 @@ void autonomous(void) {
   Turn(25, 30);
   //drive into goal zone
   Drive(14, 75);
-  // Lift tray
-  TrayLiftSlow();
   // Spin flaps down to release cubes
   SpinTreads(-75);
+  // Lift tray
+  TrayLift();
   // Wait for 3 secs to give the cubes a chance to stack before backing out
   wait(300, msec);
   // Lower tray
@@ -98,8 +99,13 @@ void usercontrol(void) {
     Controller1.ButtonL1.released(ArmStop);
     // Stop moving arm down
     Controller1.ButtonL2.released(ArmStop);
-    //slower lift when stacking cubes to not fling them out of the stack
-    Controller1.ButtonLeft.pressed(TrayLiftSlow);
+    //reset the arms
+    Controller1.ButtonA.pressed(ArmReset);
+
+    Controller1.ButtonRight.pressed(SideDriveRight);
+    Controller1.ButtonLeft.pressed(SideDriveLeft);
+    Controller1.ButtonLeft.released(SideStop);
+    Controller1.ButtonRight.released(SideStop);
     // wait
     wait(250, msec);
   }

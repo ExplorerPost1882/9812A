@@ -12,6 +12,8 @@ void TrayLower ();
 
 void TrayLift ();
 
+void TrayAdjust();
+
 void CubeLoadRev();
 
 void ArmLift();
@@ -33,3 +35,11 @@ void Drive(double distance, double speed);
 void SpinTreads(double speed);
 
 void DriveAtCube(double distance, double speed, vision::signature SIG);
+
+void SlideOnCube(double max, double speed, vision::signature SIG);
+
+void SideDriveLeft();
+void SideDriveRight();
+void SideStop();
+void SideDriveAuto(double distance, double speed);
+void RightWheelAdjust();

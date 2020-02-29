@@ -16,6 +16,7 @@ motor LeftTread = motor(PORT7, ratio36_1, false);
 motor RightTread = motor(PORT8, ratio36_1, true);
 motor LeftArm = motor(PORT2, ratio36_1, false);
 motor RightArm = motor(PORT3, ratio36_1, true);
+motor SideWheel = motor(PORT9, ratio18_1, true);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable

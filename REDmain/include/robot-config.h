@@ -11,6 +11,7 @@ extern motor LeftTread;
 extern motor RightTread;
 extern motor LeftArm;
 extern motor RightArm;
+extern motor SideWheel;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Text.

@@ -85,13 +85,13 @@ void ArmLift() {
   RightArm.spin(forward);
 }
 
-//Lift arms in auto
+// Lift arms in auto
 void ArmLiftAuto() {
   LeftArm.setPosition(0, turns);
   RightArm.setPosition(0, turns);
   // spin arms to lift
-  LeftArm.spinTo(370, rotationUnits::deg, 25, velocityUnits::pct, false);
-  RightArm.spinTo(370, rotationUnits::deg, 25, velocityUnits::pct);
+  LeftArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 25, velocityUnits::pct, false);
+  RightArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 25, velocityUnits::pct);
 }
 
 // lower arms to lower cubes
@@ -107,8 +107,8 @@ void ArmLower() {
 // lower arms in auto
 void ArmLowerAuto() {
   // spin arms to lower
-  LeftArm.spinTo(370, rotationUnits::deg, -25, velocityUnits::pct, false);
-  RightArm.spinTo(370, rotationUnits::deg, -25, velocityUnits::pct);
+  LeftArm.spinFor(directionType::rev, 370, rotationUnits::deg, 25, velocityUnits::pct, false);
+  RightArm.spinFor(directionType::rev, 370, rotationUnits::deg, -25, velocityUnits::pct);
 }
 
 // stop arms
@@ -120,8 +120,8 @@ void ArmStop() {
   armsStopped = true;
 }
 
-//turn off the motors to totally reset the arms
-void ArmReset(){
+// turn off the motors to totally reset the arms
+void ArmReset() {
   LeftArm.setStopping(coast);
   RightArm.setStopping(coast);
   LeftArm.stop();
@@ -134,7 +134,7 @@ void TrayLift() {
     wait(100, msec);
   } else {
     Tray.setVelocity(50, velocityUnits::pct);
-    Tray.spinToPosition(-830, rotationUnits::deg);
+    Tray.spinToPosition(-700, rotationUnits::deg);
   }
 }
 
@@ -147,6 +147,8 @@ void TrayLower() {
     Tray.spinToPosition(-30, rotationUnits::deg);
   }
 }
+
+void TrayAdjust() { Tray.spinFor(directionType::rev, 20, rotationUnits::deg); }
 
 // Turn the robot a number of degrees. Positive is Right, Negative is Left
 void Turn(double degrees, double speed) {
@@ -171,16 +173,54 @@ void Drive(double distance, double speed) {
 // Doing the vision test for the drive at cube function
 bool visionTest(vision::signature SIG) {
   Vision1.takeSnapshot(SIG);
-  return Vision1.largestObject.exists 
-        && Vision1.largestObject.width > 5
-        && Vision1.largestObject.height < 130;
+  return Vision1.largestObject.exists && Vision1.largestObject.width > 5 &&
+         Vision1.largestObject.height < 120;
+}
+
+// Drive sideways lining up on a cube
+void SlideOnCube(double max, double speed, vision::signature SIG) {
+  double rotations = max / CW;
+
+  const int middle = 316 / 2 - 58;
+  const int dead = 5;
+
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.setStopping(brake);
+
+  SideWheel.spinFor(directionType::fwd, rotations, rotationUnits::rev, speed, velocityUnits::pct, false);
+
+  while (SideWheel.isSpinning()) {
+    Vision1.takeSnapshot(SIG);
+    if (Vision1.largestObject.exists && Vision1.largestObject.width > 5 ) {
+      Brain.Screen.setPenColor(vex::color::white);
+      Brain.Screen.setFillColor(vex::color::purple);
+      Brain.Screen.drawRectangle(0, 0, 480, 240);
+
+      int x = Vision1.largestObject.centerX;
+      int diff = middle - x;
+      if (abs(diff) < dead) {
+        SideWheel.stop();
+        SideWheel.setStopping(coast);
+        Brain.Screen.clearScreen();
+        return;
+      }
+    }
+    else{
+      Brain.Screen.clearScreen();
+    }
+    task::sleep(10);
+  }
+  Brain.Screen.clearScreen();
 }
 
 // Dirve to a specific cube
 void DriveAtCube(double distance, double speed, vision::signature SIG) {
   double rotations = distance / CW;
 
-  const int middle = 316 / 2 - 60;
+  const int middle = 316 / 2 - 58;
   const int dead = 5;
 
   int leftSpeed = speed;
@@ -191,8 +231,11 @@ void DriveAtCube(double distance, double speed, vision::signature SIG) {
   Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
   Right.spin(directionType::fwd, rightSpeed, velocityUnits::pct);
 
+  bool keepLooking = true;
   while (Right.rotation(rotationUnits::rev) < rotations) {
-    if (visionTest(SIG)) {
+    Vision1.takeSnapshot(SIG);
+    if(keepLooking && Vision1.largestObject.exists && Vision1.largestObject.width > 5 &&
+        Vision1.largestObject.height < 120) {
       Brain.Screen.setPenColor(vex::color::white);
       Brain.Screen.setFillColor(vex::color::orange);
       Brain.Screen.drawRectangle(0, 0, 480, 240);
@@ -200,18 +243,61 @@ void DriveAtCube(double distance, double speed, vision::signature SIG) {
       int x = Vision1.largestObject.centerX;
       int diff = middle - x;
       if (abs(diff) > dead) {
-        leftSpeed = leftSpeed - diff/ 50;
+        leftSpeed = leftSpeed - diff / 40;
       } else {
         leftSpeed = speed;
       }
       Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
     } else {
+      if(keepLooking && Vision1.largestObject.exists){
+        keepLooking =  Vision1.largestObject.height < 120;
+      }
       Left.spin(directionType::fwd, speed, velocityUnits::pct);
       Right.spin(directionType::fwd, speed, velocityUnits::pct);
       Brain.Screen.clearScreen();
     }
-    task::sleep(100);
+    task::sleep(50);
   }
   Left.stop();
   Right.stop();
+}
+
+void SideDriveAuto(double distance, double speed) {
+  double rotations = distance / CW;
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spinFor(rotations, rotationUnits::rev, speed, velocityUnits::pct);
+}
+
+// drive sideways
+void SideDriveLeft() {
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spin(directionType::fwd, 100, velocityUnits::pct);
+}
+
+void SideDriveRight() {
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spin(directionType::rev, 100, velocityUnits::pct);
+}
+
+void SideStop() {
+  Left.setStopping(coast);
+  Right.setStopping(coast);
+  Right.stop();
+  Left.stop();
+  SideWheel.stop();
+}
+
+// Adjust the wheel to get out of the zone in auto
+void RightWheelAdjust() {
+  Right.spinFor(directionType::rev, .5, rotationUnits::rev, 100,
+                velocityUnits::pct);
 }

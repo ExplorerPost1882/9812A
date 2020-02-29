@@ -10,15 +10,16 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// Controller1          controller
-// Left                 motor         1
-// Right                motor         4
-// Tray                 motor         6
-// LeftTread            motor         7
-// RightTread           motor         8
-// LeftArm              motor         2
-// RightArm             motor         3
-// Vision1              vision        5
+// Controller1          controller                    
+// Left                 motor         1               
+// Right                motor         4               
+// Tray                 motor         6               
+// LeftTread            motor         7               
+// RightTread           motor         8               
+// LeftArm              motor         2               
+// RightArm             motor         3               
+// Vision1              vision        5               
+// SideWheel            motor         9               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "taskfile.h"
@@ -40,53 +41,79 @@ void autonomous(void) {
   // wait
   wait(200, msec);
   // Drive up to cubes
-  DriveAtCube(21.98, 30, Vision1__GREEN_CUBE);
+  Drive(21.98, 30);
+  //Back up slightly
+  Drive(-2.5, 25);
   // Turn to next cube
-  Turn(90, 50);
+  Turn(89, 50);
   // drive forward to next cube
   DriveAtCube(16, 30, Vision1__GREEN_CUBE);
-  wait(200, msec);
-  // Turn to prepare to stack cubes
-  Turn(60, 50);
-  // Drive up to wall to line up
-  Drive(12.56, 30);
-  // back up a little bit to line up to stack
-  Drive(-2, 30);
-  // Turn a slight bit to line up
-  Turn(-25, 30);
-  // drive into goal zone
-  Drive(6, 75);
+  wait(500, msec);
+  //drive back slightly
+  Drive(-3, 25);
+  //Drive to the wall to line up near the zone
+  SideDriveAuto(-30,100);
+  Turn(5, 80);
+  //drive slightly away from thew wall
+  SideDriveAuto(4, 25);
+  //turn off the treads
+  CubeLoadStop();
+  // drive into goal zone and wait a sec
+  Drive(12, 50);
+  wait(500, msec);
+  // Spin flaps down to release cubes
+  SpinTreads(-50);
   // Lift tray
   TrayLift();
-  // Spin flaps down to release cubes
-  SpinTreads(-75);
   // Wait for 3 secs to give the cubes a chance to stack before backing out
   wait(300, msec);
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
-  Drive(-12.5, 100);
-   CubeLoadStop();
-  // Turn to get cube for tower
-  Turn(-200, 25);
-  // drive at the cube to put it in the tower and turns on the flaps
-  SpinTreads(100);
-  DriveAtCube(20, 25, Vision1__GREEN_CUBE);
-  // Drive back slightly to get the cube in the tower and stop the treads so the
-  // cube is in our arms
+  RightWheelAdjust();
+  Drive(-12.5, 90);
   CubeLoadStop();
-  Drive(-6, 25);
-  // lift up the arms
+  wait(600, msec);
+  //line up against the wall
+  SideDriveAuto(-15, 100);
+  Turn(-10, 100);
+  SideDriveAuto(-5, 100);
+  //drive away from the wall
+  SideDriveAuto(10, 100);
+  //turn 90 degrees
+  Turn(-90, 50);
+  //back up on wall
+  Drive(-12, 50);
+  //drive to the cube
+  Drive(36.5, 40);
+  //line up sideways
+  SlideOnCube(15, 100, Vision1__GREEN_CUBE);
+  //pick up cube
+  SpinTreads(75);
+  wait(200, msec);
+  Drive(13, 10);
+  wait(600, msec);
+  CubeLoadStop();
+  Drive(-3,25);
+  //lift arms
   ArmLiftAuto();
-  // drive up to the tower
-  Drive(5, 25);
-  // drop the cube in the tower
+  //eject cube
   SpinTreads(-100);
-  // drive away from the tower
-  Drive(-8, 25);
-  // lower the arms
-  ArmLowerAuto();
-  // All Done!!!
+  wait(2000, msec);
+  //lower arms
+  ArmReset();
+  CubeLoadStop();
+  //back up to wall
+  //drive up slightly
+  //turn 90 degrees
+  //drive up slightly
+  //pick up cube
+  //drive back
+  //lift arms
+  //drive up
+  //eject cube
+  //drive back
+  //lower arms
 }
 
 void TEST() { ArmLiftAuto(); }
@@ -106,6 +133,8 @@ void usercontrol(void) {
     Controller1.ButtonUp.pressed(TrayLift);
     // Lower cubes
     Controller1.ButtonDown.pressed(TrayLower);
+    //Adjust the tray
+    Controller1.ButtonY.pressed(TrayAdjust);
     // Load cubes
     Controller1.ButtonR1.pressed(CubeLoad);
     // Stop cube load
@@ -126,6 +155,14 @@ void usercontrol(void) {
     Controller1.ButtonUp.pressed(TrayLift);
     //reset the arms completly to re-adjust
     Controller1.ButtonA.pressed(ArmReset);
+
+    Controller1.ButtonRight.pressed(SideDriveRight);
+    Controller1.ButtonLeft.pressed(SideDriveLeft);
+    Controller1.ButtonLeft.released(SideStop);
+    Controller1.ButtonRight.released(SideStop);
+
+
+
     // wait
     wait(250, msec);
   }
@@ -134,8 +171,8 @@ void usercontrol(void) {
 int main() {
   // Run the pre-autonomous function.
   pre_auton();
-
-  Competition.autonomous(autonomous);
+  autonomous();
+  //Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
   // usercontrol();
 

@@ -87,16 +87,6 @@ void ArmLift() {
   // spin arms to lift
   LeftArm.spin(forward);
   RightArm.spin(forward);
-  armsStopped = false;
-
-  while (!armsStopped) {
-    LeftArm.setVelocity(50.0 + RightArm.position(degrees) -
-                            LeftArm.position(degrees),
-                        velocityUnits::pct);
-    RightArm.setVelocity(50.0 + LeftArm.position(degrees) -
-                             RightArm.position(degrees),
-                         velocityUnits::pct);
-  }
 }
 // lower arms to lower cubes
 void ArmLower() {
@@ -115,18 +105,16 @@ void ArmStop() {
   RightArm.stop();
   armsStopped = true;
 }
+
+//reset the arms
+void ArmReset(){
+  LeftArm.setStopping(coast);
+  RightArm.setStopping(coast);
+  LeftArm.stop();
+  RightArm.stop();
+}
 // lift the tray to drop the cubes
 void TrayLift() {
-  if (Tray.position(degrees) == 900) {
-    wait(100, msec);
-  } else {
-    Tray.setVelocity(100, velocityUnits::pct);
-    Tray.spinToPosition(-850, rotationUnits::deg);
-  }
-}
-
-// lift the tray slowly to drop the cubes
-void TrayLiftSlow() {
   if (Tray.position(degrees) == 900) {
     wait(100, msec);
   } else {
@@ -150,18 +138,39 @@ void TrayLower() {
 void Turn(double degrees, double speed) {
   double fractionOfTurns = degrees / 360.0;
   double rotationsToTurnDegreesGiven = fractionOfTurns * RotationsToTurn360;
-  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
-               velocityUnits::pct, false);
-  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed,
-                velocityUnits::pct, true);
+  Left.spinFor(forward, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, false);
+  Right.spinFor(reverse, rotationsToTurnDegreesGiven, rotationUnits::rev, speed, velocityUnits::pct, true);
 }
 
 // Drive the robot a number of inches. Distance is in inches, speed is in
 // percent. Drive back using a negative velocity
 void Drive(double distance, double speed) {
   double rotations = distance / CW;
-  Left.spinFor(forward, rotations, rotationUnits::rev, speed,
-               velocityUnits::pct, false);
-  Right.spinFor(forward, rotations, rotationUnits::rev, speed,
-                velocityUnits::pct, true);
+  Left.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, false);
+  Right.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, true);
+}
+
+//drive sideways
+void SideDriveLeft(){
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spin(directionType::fwd, 50, velocityUnits::pct);
+}
+
+void SideDriveRight(){
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spin(directionType::rev, 50, velocityUnits::pct);
+}
+
+void SideStop(){
+  Left.setStopping(coast);
+  Right.setStopping(coast);
+  Right.stop();
+  Left.stop();
+  SideWheel.stop();
 }
