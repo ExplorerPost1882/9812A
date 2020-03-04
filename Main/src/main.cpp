@@ -104,21 +104,33 @@ void autonomous(void) {
   ArmReset();
   CubeLoadStop();
   //back up to wall
-  //drive up slightly
-  //turn 90 degrees
-  //drive up slightly
+  Drive(-37, 80);
+  //go a small distance away from the wall and turn
+  Drive(6, 80);
+  Turn(-90, 80);
+  //line up against the wall and drive slightly away
+  SideDriveAuto(7, 80);
+  SideDriveAuto(10, 80);
+  //drive up to the cube
+  Drive(18, 80);
+  //line up on the cube
+  SlideOnCube(10, 80, Vision1__PURPLE_CUBE);
   //pick up cube
-  //drive back
+  SpinTreads(75);
+  wait(200, msec);
+  Drive(13, 10);
+  wait(600, msec);
+  CubeLoadStop();
+  Drive(-3,25);
   //lift arms
-  //drive up
+  ArmLiftAuto();
   //eject cube
-  //drive back
+  SpinTreads(-100);
+  wait(2000, msec);
   //lower arms
+  ArmReset();
+  CubeLoadStop();
 }
-
-void TEST() { ArmLiftAuto(); }
-
-void TEST2() { ArmLowerAuto(); }
 
 void usercontrol(void) {
   // reset tray position

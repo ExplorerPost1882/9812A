@@ -31,3 +31,5 @@ void SpinTreads(double speed);
 void SideDriveLeft();
 void SideDriveRight();
 void SideStop();
+void SideDriveAuto(double distance, double speed);
+void RightWheelAdjust();

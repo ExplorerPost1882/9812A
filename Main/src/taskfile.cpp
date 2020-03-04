@@ -78,8 +78,8 @@ void ArmLift() {
   LeftArm.setPosition(0, turns);
   RightArm.setPosition(0, turns);
   // Set speed of arms
-  LeftArm.setVelocity(25, velocityUnits::pct);
-  RightArm.setVelocity(25, velocityUnits::pct);
+  LeftArm.setVelocity(50, velocityUnits::pct);
+  RightArm.setVelocity(50, velocityUnits::pct);
   // spin arms to lift
   LeftArm.spin(forward);
   RightArm.spin(forward);
@@ -90,8 +90,8 @@ void ArmLiftAuto() {
   LeftArm.setPosition(0, turns);
   RightArm.setPosition(0, turns);
   // spin arms to lift
-  LeftArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 25, velocityUnits::pct, false);
-  RightArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 25, velocityUnits::pct);
+  LeftArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 50, velocityUnits::pct, false);
+  RightArm.spinFor(directionType::fwd, 370, rotationUnits::deg, 50, velocityUnits::pct);
 }
 
 // lower arms to lower cubes
@@ -262,6 +262,7 @@ void DriveAtCube(double distance, double speed, vision::signature SIG) {
   Right.stop();
 }
 
+//drive sideways in autonomous
 void SideDriveAuto(double distance, double speed) {
   double rotations = distance / CW;
   Left.setStopping(hold);

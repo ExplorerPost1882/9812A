@@ -150,27 +150,43 @@ void Drive(double distance, double speed) {
   Right.spinFor(forward, rotations, rotationUnits::rev, speed, velocityUnits::pct, true);
 }
 
-//drive sideways
-void SideDriveLeft(){
+//drive sideways in autonomous
+void SideDriveAuto(double distance, double speed) {
+  double rotations = distance / CW;
   Left.setStopping(hold);
   Right.setStopping(hold);
   Right.stop();
   Left.stop();
-  SideWheel.spin(directionType::fwd, 50, velocityUnits::pct);
+  SideWheel.spinFor(rotations, rotationUnits::rev, speed, velocityUnits::pct);
 }
 
-void SideDriveRight(){
+// drive sideways
+void SideDriveLeft() {
   Left.setStopping(hold);
   Right.setStopping(hold);
   Right.stop();
   Left.stop();
-  SideWheel.spin(directionType::rev, 50, velocityUnits::pct);
+  SideWheel.spin(directionType::fwd, 100, velocityUnits::pct);
 }
 
-void SideStop(){
+void SideDriveRight() {
+  Left.setStopping(hold);
+  Right.setStopping(hold);
+  Right.stop();
+  Left.stop();
+  SideWheel.spin(directionType::rev, 100, velocityUnits::pct);
+}
+
+void SideStop() {
   Left.setStopping(coast);
   Right.setStopping(coast);
   Right.stop();
   Left.stop();
   SideWheel.stop();
+}
+
+// Adjust the wheel to get out of the zone in auto
+void RightWheelAdjust() {
+  Right.spinFor(directionType::rev, .5, rotationUnits::rev, 100,
+                velocityUnits::pct);
 }
