@@ -186,8 +186,8 @@ void usercontrol(void) {
 int main() {
   // Run the pre-autonomous function.
   pre_auton();
-  autonomous();
-  //Competition.autonomous(autonomous);
+  //autonomous();
+  Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
   // usercontrol();
 
