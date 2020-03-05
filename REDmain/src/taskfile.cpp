@@ -53,6 +53,52 @@ void Drive() {
   }
 }
 
+// Dirve to a specific cube
+void DriveAtCube(double distance, double speed, vision::signature SIG) {
+  double rotations = distance / CW;
+
+  const int middle = 316 / 2 - 58;
+  const int dead = 5;
+
+  int leftSpeed = speed;
+  int rightSpeed = speed;
+
+  Right.resetRotation();
+
+  Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
+  Right.spin(directionType::fwd, rightSpeed, velocityUnits::pct);
+
+  bool keepLooking = true;
+  while (Right.rotation(rotationUnits::rev) < rotations) {
+    Vision1.takeSnapshot(SIG);
+    if(keepLooking && Vision1.largestObject.exists && Vision1.largestObject.width > 5 &&
+        Vision1.largestObject.height < 120) {
+      Brain.Screen.setPenColor(vex::color::white);
+      Brain.Screen.setFillColor(vex::color::orange);
+      Brain.Screen.drawRectangle(0, 0, 480, 240);
+
+      int x = Vision1.largestObject.centerX;
+      int diff = middle - x;
+      if (abs(diff) > dead) {
+        leftSpeed = leftSpeed - diff / 40;
+      } else {
+        leftSpeed = speed;
+      }
+      Left.spin(directionType::fwd, leftSpeed, velocityUnits::pct);
+    } else {
+      if(keepLooking && Vision1.largestObject.exists){
+        keepLooking =  Vision1.largestObject.height < 120;
+      }
+      Left.spin(directionType::fwd, speed, velocityUnits::pct);
+      Right.spin(directionType::fwd, speed, velocityUnits::pct);
+      Brain.Screen.clearScreen();
+    }
+    task::sleep(50);
+  }
+  Left.stop();
+  Right.stop();
+}
+
 // Spin the treads to take in cubes. Use a negative speed to release a stack
 void SpinTreads(double speed) {
   LeftTread.spin(forward, speed, velocityUnits::pct);
@@ -186,7 +232,7 @@ void SideStop() {
 }
 
 // Adjust the wheel to get out of the zone in auto
-void RightWheelAdjust() {
-  Right.spinFor(directionType::rev, .5, rotationUnits::rev, 100,
+void LeftWheelAdjust() {
+  Left.spinFor(directionType::rev, .5, rotationUnits::rev, 100,
                 velocityUnits::pct);
 }

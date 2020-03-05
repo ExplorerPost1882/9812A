@@ -48,7 +48,7 @@ void autonomous(void) {
   Turn(89, 50);
   // drive forward to next cube
   DriveAtCube(16, 30, Vision1__GREEN_CUBE);
-  wait(500, msec);
+  wait(700, msec);
   //drive back slightly
   Drive(-3, 25);
   //Drive to the wall to line up near the zone
@@ -103,18 +103,20 @@ void autonomous(void) {
   //lower arms
   ArmReset();
   CubeLoadStop();
+
+  /*
   //back up to wall
-  Drive(-37, 80);
+  Drive(-50, 70);
   //go a small distance away from the wall and turn
-  Drive(6, 80);
-  Turn(-90, 80);
+  Drive(9, 70);
+  Turn(-90, 70);
   //line up against the wall and drive slightly away
   SideDriveAuto(7, 80);
   SideDriveAuto(10, 80);
   //drive up to the cube
   Drive(18, 80);
   //line up on the cube
-  SlideOnCube(10, 80, Vision1__PURPLE_CUBE);
+  SlideOnCube(10, 80, Vision1__GREEN_CUBE);
   //pick up cube
   SpinTreads(75);
   wait(200, msec);
@@ -130,6 +132,7 @@ void autonomous(void) {
   //lower arms
   ArmReset();
   CubeLoadStop();
+  */
 }
 
 void usercontrol(void) {

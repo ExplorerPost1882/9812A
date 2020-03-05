@@ -19,6 +19,7 @@
 // LeftArm              motor         2               
 // RightArm             motor         3               
 // SideWheel            motor         9               
+// Vision1              vision        5               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "taskfile.h"
@@ -42,23 +43,23 @@ void autonomous(void) {
   // Drive up to cubes
   Drive(21.98, 30);
   //Back up slightly
-  Drive(-2.5, 25);
+  Drive(-.5, 25);
   // Turn to next cube
-  Turn(-89, 50);
+  Turn(-87, 50);
   // drive forward to next cube
-  DriveAtCube(16, 30, Vision1__GREEN_CUBE);
-  wait(500, msec);
+  DriveAtCube(16, 30, Vision1__ORANGE_CUBE);
+  wait(700, msec);
   //drive back slightly
   Drive(-3, 25);
   //Drive to the wall to line up near the zone
-  SideDriveAuto(-30,100);
+  SideDriveAuto(45, 100);
   Turn(-5, 80);
   //drive slightly away from thew wall
-  SideDriveAuto(4, 25);
+  SideDriveAuto(-6, 25);
   //turn off the treads
   CubeLoadStop();
   // drive into goal zone and wait a sec
-  Drive(12, 50);
+  Drive(18, 50);
   wait(500, msec);
   // Spin flaps down to release cubes
   SpinTreads(-50);
@@ -69,8 +70,8 @@ void autonomous(void) {
   // Lower tray
   TrayLower();
   // Drive back to fully stack cubes
-  RightWheelAdjust();
-  Drive(-12.5, 90);
+  //LeftWheelAdjust();
+  Drive(-12.5, 100);
   CubeLoadStop();
   wait(600, msec);
 }
